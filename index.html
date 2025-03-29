@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Abdullah Ahmed | Personal Portfolio</title>
+    <title>abdulahmd</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -143,25 +143,37 @@
         .grid {
             width: 100%;
             height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 136, 255, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 136, 255, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            perspective: 1000px;
-            transform-style: preserve-3d;
-            transform: rotateX(60deg) scale(2);
-            animation: grid-animation 15s linear infinite;
+            background-color: black;
+            position: fixed;
+            inset: 0;
+            pointer-events: none; /* Allow interaction with underlying elements */
         }
-        
-        @keyframes grid-animation {
+
+        #home .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background-color: rgba(0, 136, 255, 0.8); /* Blue stars */
+            opacity: 0.8;
+            animation: flicker 1.5s infinite alternate ease-in-out;
+            will-change: transform, opacity;
+        }
+
+        @keyframes flicker {
             0% {
-                background-position: 0 0;
+                opacity: 0.4;
+            }
+            50% {
+                opacity: 1;
             }
             100% {
-                background-position: 0 50px;
+                opacity: 0.6;
             }
         }
-        
+
+
+
         .subtitle {
             font-size: 1.5rem;
             margin-bottom: 30px;
@@ -193,18 +205,48 @@
             background-color: rgba(15, 15, 15, 0.8);
             position: relative;
         }
-        
+
         .about-container {
             display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 30px;
+            flex-wrap: wrap;
         }
-        
+        .about-image {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .styled-image {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+        .styled-image:hover {
+            transform: scale(1.05);
+        }
+        .about-text {
+            flex-grow: 1;
+            min-width: 300px;
+        }
         .skill-list {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 20px;
+        }
+        @media (max-width: 768px) {
+            .about-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-image {
+                order: -1;
+            }
         }
         
         .skill-pill {
@@ -225,7 +267,7 @@
         }
         
         /* Experience section */
-        #experience {
+        #work {
             position: relative;
         }
         
@@ -274,6 +316,33 @@
             font-size: 1.3rem;
             color: var(--accent-color);
             margin-bottom: 15px;
+        }
+
+        .work-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: #0f0f0f;
+            cursor: pointer;
+        }
+
+        .tab-button.active {
+            background-color: rgba(0, 136, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
         
         /* Contact section */
@@ -355,7 +424,7 @@
             justify-content: center;
             background-color: var(--secondary-color);
             border-radius: 50%;
-            transition: all 0.3s ease;
+            transition: all 0.05s ease;
             transform-style: preserve-3d;
         }
         
@@ -410,7 +479,7 @@
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
-                <a href="#experience">Experience</a>
+                <a href="#work">Work</a>
                 <a href="#contact">Contact</a>
             </div>
         </div>
@@ -419,86 +488,149 @@
     <!-- Home Section -->
     <section id="home">
         <div class="home-bg">
-            <div class="grid"></div>
+            <div class="star"></div> <!-- Keep this for one star element, the rest will be generated dynamically -->
         </div>
         <div class="home-content">
             <h1>Abdullah Ahmed</h1>
             <p class="subtitle">Honors CS & Nanotech at UTD</p>
-            <p>AI Engineering • Robotics • Software Development • Computational Biology</p>
-            <a href="#contact" class="cta-button">Hit me up 👊</a>
+            <div class="social-links">
+                <!-- LinkedIn -->
+                <a href="https://www.linkedin.com/in/abdullah-ahmed-27917627b/" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                </a>
+            
+                <!-- GitHub -->
+                <a href="https://github.com/abdulahmd" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                </a>
+            
+                <!-- Instagram -->
+                <a href="https://www.instagram.com/abdulahmd0/" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+            
+                <!-- X (formerly Twitter) -->
+                <a href="https://x.com/abdulahmd01" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                    </svg>
+                </a>
+            
+                <!-- Resume -->
+                <a href="https://docs.google.com/presentation/d/1E6fhYtTu5f-tHWmV-ewFwkKMhuleMFD7xyZy1OlMLPg/edit?usp=sharing" class="social-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 6v15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M11 9v6l4-3-4-3z"></path>
+                    </svg>
+                </a>
+            </div>
+            
         </div>
     </section>
     
-    <!-- About Section -->
-    <section id="about">
+    
+     <!-- About Section -->
+     <section id="about">
         <h2>About Me</h2>
         <div class="about-container">
-            <p>I'm a high school senior passionate about pushing the boundaries of technology through AI, robotics, and mechanical engineering. My interdisciplinary approach allows me to develop comprehensive solutions that bridge the gap between software and hardware.</p>
-            
-            <p>With a strong foundation in both theoretical concepts and practical applications, I strive to create innovations that can make a meaningful impact in the world.</p>
-            
-            <h3>My Skills</h3>
-            <div class="skill-list">
-                <span class="skill-pill">Artificial Intelligence</span>
-                <span class="skill-pill">Machine Learning</span>
-                <span class="skill-pill">Robotics</span>
-                <span class="skill-pill">Computer Vision</span>
-                <span class="skill-pill">Python</span>
-                <span class="skill-pill">R</span>
-                <span class="skill-pill">TensorFlow</span>
-                <span class="skill-pill">PyTorch</span>
-                <span class="skill-pill">ROS 2</span>
-                <span class="skill-pill">Solid Works</span>
-                <span class="skill-pill">Arduino</span>
-                <span class="skill-pill">Raspberry Pi</span>
-                <span class="skill-pill">Java</span>
-                <span class="skill-pill">Calculus</span>
-                <span class="skill-pill">Statistics</span>
-                <span class="skill-pill">Real Analysis</span>
+            <div class="about-image">
+                <img src="https://media.licdn.com/dms/image/v2/D5603AQHR2NKDUSCENw/profile-displayphoto-shrink_400_400/B56ZXgcTHwGcAg-/0/1743227270530?e=1748476800&v=beta&t=Tn5KC7pVzbiaNSJUXqkn1S6LNircgknYCaTmoXuKnIo" alt="Abdullah Ahmed" class="styled-image">
             </div>
+            <div class="about-text">
+                <p>I'm a high school senior passionate about pushing the boundaries of technology through AI, robotics, and mechanical engineering. My interdisciplinary approach allows me to develop comprehensive solutions that bridge the gap between software and hardware.</p>
+                
+                <p>With a strong foundation in both theoretical concepts and practical applications, I strive to create innovations that can make a meaningful impact in the world.</p>
+            </div>
+        </div>
+        <div class="skill-list">
+            <span class="skill-pill">Artificial Intelligence</span>
+            <span class="skill-pill">Machine Learning</span>
+            <span class="skill-pill">Robotics</span>
+            <span class="skill-pill">Computer Vision</span>
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">R</span>
+            <span class="skill-pill">TensorFlow</span>
+            <span class="skill-pill">PyTorch</span>
+            <span class="skill-pill">ROS 2</span>
+            <span class="skill-pill">Solid Works</span>
+            <span class="skill-pill">Arduino</span>
+            <span class="skill-pill">Raspberry Pi</span>
+            <span class="skill-pill">Java</span>
+            <span class="skill-pill">Calculus</span>
+            <span class="skill-pill">Statistics</span>
+            <span class="skill-pill">Real Analysis</span>
         </div>
     </section>
     
-    <!-- Experience/Projects Section -->
-    <section id="experience">
-        <h2>Experience</h2>
-        <p>Here are some of the projects I've worked on that showcase my skills and interests.</p>
+    <!-- Work -->
+    <section id="work">
+        <h2>Work</h2>
+        <div class="work-tabs">
+            <button class="tab-button active" onclick="showTab('projects')">Projects</button>
+            <button class="tab-button" onclick="showTab('experiences')">Experiences</button>
+        </div>
         
-        <div class="project-grid">
-            <div class="project-card">
-                <h3>AutoHawk</h3>
-                <p>Developed an Autonomous navigation system for drones using an RRT* Algorithm along with a CO2 sensor.</p>
-                <p>Technologies: Pixhawk 4.2.8, C++, ArduPilot, MATLAB</p>
+        <!-- Projects Subtab -->
+        <div id="projects" class="tab-content active">
+            <p>Here are some of the projects I've worked on that showcase my skills and interests.</p>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>AutoHawk</h3>
+                    <p>Developed an Autonomous navigation system for drones using an RRT* Algorithm along with a CO2 sensor.</p>
+                    <div class="skill-list">
+                        <span class="skill-pill">Pixhawk 4.2.8</span>
+                        <span class="skill-pill">C++</span>
+                        <span class="skill-pill">ArduPilot</span>
+                        <span class="skill-pill">MATLab</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>AI-Powered Medical Diagnostic Tool</h3>
+                    <p>Created a machine learning model to assist in the early detection of conditions from medical imaging data with high accuracy.</p>
+                    <p>Technologies: PyTorch, Python, Data Analysis</p>
+                    <div class="skill-list">
+                        <span class="skill-pill">Python</span>
+                        <span class="skill-pill">PyTorch</span>
+                        <span class="skill-pill">Data Analysis</span>
+                    </div>
+                </div>
             </div>
-            
-            <div class="project-card">
-                <h3>AI-Powered Medical Diagnostic Tool</h3>
-                <p>Created a machine learning model to assist in the early detection of conditions from medical imaging data with high accuracy.</p>
-                <p>Technologies: PyTorch, Python, Data Analysis</p>
-            </div>
-            
-            <div class="project-card">
-                <h3>Mechanical Exoskeleton Prototype</h3>
-                <p>Designed and built a scaled prototype of an assistive exoskeleton for mobility enhancement using lightweight materials and custom electronics.</p>
-                <p>Technologies: CAD, 3D Printing, Electronics, Mechanical Design</p>
-            </div>
-            
-            <div class="project-card">
-                <h3>Natural Language Processing API</h3>
-                <p>Built an API that processes and analyzes text data for sentiment analysis, topic modeling, and entity recognition.</p>
-                <p>Technologies: Python, NLP, RESTful APIs, Docker</p>
-            </div>
-            
-            <div class="project-card">
-                <h3>Smart Home Automation System</h3>
-                <p>Engineered a comprehensive home automation system using IoT devices and machine learning to optimize energy usage and enhance comfort.</p>
-                <p>Technologies: IoT, Machine Learning, Embedded Systems</p>
-            </div>
-            
-            <div class="project-card">
-                <h3>Sustainable Energy Monitoring Platform</h3>
-                <p>Developed a platform to monitor and analyze renewable energy production and consumption patterns to maximize efficiency.</p>
-                <p>Technologies: Data Visualization, Full-Stack Development, Real-time Analytics</p>
+        </div>
+        
+        <!-- Experiences Subtab -->
+        <div id="experiences" class="tab-content">
+            <p>Here are some roles and positions I've held.</p>
+            <div class="project-grid">
+                <div class="project-card">
+                    <h3>AutoHawk</h3>
+                    <p>Developed an Autonomous navigation system for drones using an RRT* Algorithm along with a CO2 sensor.</p>
+                    <div class="skill-list">
+                        <span class="skill-pill">Pixhawk 4.2.8</span>
+                        <span class="skill-pill">C++</span>
+                        <span class="skill-pill">ArduPilot</span>
+                        <span class="skill-pill">MATLab</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>AI-Powered Medical Diagnostic Tool</h3>
+                    <p>Created a machine learning model to assist in the early detection of conditions from medical imaging data with high accuracy.</p>
+                    <div class="skill-list">
+                        <span class="skill-pill">Pixhawk 4.2.8</span>
+                        <span class="skill-pill">C++</span>
+                        <span class="skill-pill">ArduPilot</span>
+                        <span class="skill-pill">MATLab</span>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -528,35 +660,7 @@
                 <button type="submit">Send Message</button>
             </form>
             
-            <div class="social-links">
-                <a href="https://www.linkedin.com/in/abdullah-ahmed-27917627b/" class="social-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg>
-                </a>
-                
-                <a href="https://github.com/abdulahmd" class="social-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-                    </svg>
-                </a>
-                
-                <a href="https://www.instagram.com/abdulahmd0/" class="social-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                    </svg>
-                </a>
-                
-                <a href="https://x.com/abdulahmd01" class="social-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
-                    </svg>
-                </a>
-            </div>
+            
         </div>
     </section>
     
@@ -564,5 +668,105 @@
     <footer>
         <p>&copy; 2025 abdulahmd. All Rights Reserved.</p>
     </footer>
+
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        const numStars = 500; // Number of stars
+
+        // Create random stars and append them to the home section
+        const homeBg = document.querySelector('.home-bg');
+        for (let i = 0; i < numStars; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            
+            // Set random position for each star
+            star.style.top = `${Math.random() * 100}vh`;
+            star.style.left = `${Math.random() * 100}vw`;
+
+            // Randomly change the size of the stars for more variety
+            const starSize = Math.random() * 2 + 1; // Between 1px and 3px
+            star.style.width = `${starSize}px`;
+            star.style.height = `${starSize}px`;
+
+            // Randomly set the star's speed for more dynamic movement
+            const speedX = Math.random() * 0.5 - 0.25; // Random horizontal speed
+            const speedY = Math.random() * 0.5 - 0.25; // Random vertical speed
+            star.dataset.speedX = speedX;
+            star.dataset.speedY = speedY;
+
+            // Randomize the flicker animation delay for each star to create random twinkling
+            const flickerDelay = Math.random() * 2 + 's'; // Random delay between 0 and 2 seconds
+            star.style.animationDelay = flickerDelay;
+
+            homeBg.appendChild(star);
+        }
+
+        // Move the stars randomly over time
+        function moveStars() {
+            const stars = document.querySelectorAll('.home-bg .star');
+            stars.forEach(star => {
+                // Get the current position of the star
+                let top = parseFloat(star.style.top);
+                let left = parseFloat(star.style.left);
+
+                // Get the speed for this star from the dataset
+                const speedX = parseFloat(star.dataset.speedX);
+                const speedY = parseFloat(star.dataset.speedY);
+
+                // Move the star by its speed values
+                top += speedY;
+                left += speedX;
+
+                // If the star goes off the screen, reset it to the other side
+                if (top > 100) top = 0;
+                if (top < 0) top = 100;
+                if (left > 100) left = 0;
+                if (left < 0) left = 100;
+
+                // Set the new position
+                star.style.top = `${top}vh`;
+                star.style.left = `${left}vw`;
+            });
+        }
+
+        // Run the random star movement
+        setInterval(moveStars, 30); // Update the position every 30ms
+
+        // Cursor movement effect (stars follow the cursor with a smoother, more subtle movement)
+        document.addEventListener('mousemove', (e) => {
+            const stars = document.querySelectorAll('.home-bg .star');
+            const cursorX = e.clientX;
+            const cursorY = e.clientY;
+
+            stars.forEach(star => {
+                const starX = parseFloat(star.style.left);
+                const starY = parseFloat(star.style.top);
+
+                const dx = cursorX - (starX * window.innerWidth / 100);
+                const dy = cursorY - (starY * window.innerHeight / 100);
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                // Apply movement for the stars when the cursor is nearby, but make the movement more subtle
+                if (distance < 100) {  // Closer interaction
+                    const moveFactor = 0.5 - distance / 100; // Lower movement factor for more subtle movement
+                    star.style.transform = `translate(-50%, -50%) translate(${dx * moveFactor}px, ${dy * moveFactor}px)`;
+                } else {
+                    // Reset the transform when the cursor is far away
+                    star.style.transform = 'translate(-50%, -50%)';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
