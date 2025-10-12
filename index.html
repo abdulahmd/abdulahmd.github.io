@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdullah Ahmed - Systems & Mechatronics Engineering</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Updated color scheme to black/gray/white with engineering aesthetic */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #0a0a0a;
+            --text-secondary: #525252;
+            --accent: #171717;
+            --accent-hover: #404040;
+            --card-bg: #ffffff;
+            --border: #e5e5e5;
+            --shadow: rgba(0, 0, 0, 0.08);
+            --grid-line: rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #171717;
+            --text-primary: #fafafa;
+            --text-secondary: #a3a3a3;
+            --accent: #fafafa;
+            --accent-hover: #d4d4d4;
+            --card-bg: #171717;
+            --border: #262626;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --grid-line: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            font-family: 'Courier New', monospace, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+            /* Added engineering grid background */
+            background-image: 
+                linear-gradient(var(--grid-line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+            background-size: 50px 50px;
+            background-attachment: fixed;
+        }
+
+        /* Removed colorful blob, replaced with subtle geometric pattern */
+        .blob-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .geometric-pattern {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--grid-line);
+            opacity: 0.3;
+            animation: rotate 30s infinite linear;
+        }
+
+        .geometric-pattern:nth-child(1) {
+            top: 10%;
+            right: 10%;
+            transform: rotate(45deg);
+        }
+
+        .geometric-pattern:nth-child(2) {
+            bottom: 20%;
+            left: 15%;
+            width: 200px;
+            height: 200px;
+            animation-duration: 40s;
+            animation-direction: reverse;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        [data-theme="dark"] nav {
+            background-color: rgba(10, 10, 10, 0.95);
+        }
+
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-weight: 500;
+            font-family: 'Courier New', monospace;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Section Headers */
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Updated About Section with profile picture and skills */
+        .about {
+            background-color: var(--bg-secondary);
+        }
+
+        .about-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-intro {
+            display: flex;
+            gap: 3rem;
+            align-items: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .profile-picture {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: var(--border);
+            border: 3px solid var(--accent);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--text-secondary);
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .about-text p {
+            margin-bottom: 1rem;
+        }
+
+        .skills-section {
+            margin-top: 3rem;
+        }
+
+        .skills-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .skill-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .skill-icon {
+            font-size: 3rem;
+        }
+
+        .skill-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Updated Experience Section with thumbnails and modal */
+        .experience-timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .experience-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .experience-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .experience-thumbnail {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--border));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .experience-content {
+            padding: 1.5rem;
+        }
+
+        .experience-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .experience-card .company {
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .experience-card .date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .experience-card .preview {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            margin: 5% auto;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            margin-bottom: 1.5rem;
+            padding-right: 2rem;
+        }
+
+        .modal-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .modal-header .company {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .modal-header .date {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .modal-body {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .modal-body h3 {
+            font-size: 1.2rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .modal-body ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .modal-body li {
+            padding-left: 1.5rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+
+        .modal-body li::before {
+            content: "▹";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+        }
+
+        /* Added Blog Section */
+        .blog {
+            background-color: var(--bg-primary);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .blog-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .blog-thumbnail {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--border));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .blog-content {
+            padding: 1.5rem;
+        }
+
+        .blog-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .blog-card .blog-date {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .blog-card .blog-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Projects Section */
+        .projects {
+            background-color: var(--bg-secondary);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--shadow);
+            border-color: var(--accent);
+        }
+
+        .project-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .project-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            border: 1px solid var(--border);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Contact Section */
+        .contact-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-form {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-success {
+            display: none;
+            background-color: var(--accent);
+            color: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-secondary);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--bg-primary);
+                flex-direction: column;
+                padding: 1rem;
+                border-bottom: 1px solid var(--border);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+
+            section {
+                padding: 4rem 0;
+            }
+
+            .projects-grid,
+            .experience-timeline,
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .about-intro {
+                flex-direction: column;
+            }
+
+            .skills-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 1rem;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+     Animated Background 
+    <div class="blob-container">
+         Replaced blobs with geometric patterns 
+        <div class="geometric-pattern"></div>
+        <div class="geometric-pattern"></div>
+    </div>
+
+     Navigation 
+    <nav>
+        <div class="container">
+            <div class="logo">AA</div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+            <ul id="navMenu">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#blog">Blog</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><button class="theme-toggle" id="themeToggle">🌙</button></li>
+            </ul>
+        </div>
+    </nav>
+
+     Hero Section 
+    <section class="hero" id="home">
+        <div class="container">
+            <div>
+                <h1>Hello, I'm Abdullah Ahmed 👋</h1>
+                <p class="subtitle">Systems & Mechatronics Engineering Undergrad</p>
+                <p class="tagline">Building things that move and think.</p>
+                <div class="hero-buttons">
+                    <a href="https://github.com" target="_blank" class="btn btn-primary">GitHub</a>
+                    <a href="https://linkedin.com" target="_blank" class="btn btn-primary">LinkedIn</a>
+                    <a href="mailto:abdullah@example.com" class="btn btn-secondary">Email Me</a>
+                    <a href="#" class="btn btn-secondary">Resume</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     About Section 
+    <section class="about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <h2>About Me</h2>
+                <p>Get to know me better</p>
+            </div>
+            <div class="about-content">
+                 Added profile picture and restructured layout 
+                <div class="about-intro">
+                    <div class="profile-picture">👤</div>
+                    <div class="about-text">
+                        <p>
+                            I'm a freshman studying Systems & Mechatronics Engineering with a passion for creating intelligent systems that bridge the physical and digital worlds. My interests span robotics, embedded systems, and control algorithms, with a particular focus on developing intuitive front-end tools for robotics applications.
+                        </p>
+                        <p>
+                            I believe in the power of interdisciplinary learning and hands-on experimentation. Whether it's programming microcontrollers, designing control systems, or building web interfaces for complex robotics platforms, I'm always excited to tackle new challenges and learn emerging technologies.
+                        </p>
+                    </div>
+                </div>
+
+                 Added skills section with icons 
+                <div class="skills-section">
+                    <h3>Skills & Technologies</h3>
+                    <div class="skills-grid">
+                        <div class="skill-item">
+                            <div class="skill-icon">⚙️</div>
+                            <div class="skill-name">Mechanical Design</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">🤖</div>
+                            <div class="skill-name">Robotics</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">💻</div>
+                            <div class="skill-name">C/C++</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">🐍</div>
+                            <div class="skill-name">Python</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">📊</div>
+                            <div class="skill-name">MATLAB</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">🔌</div>
+                            <div class="skill-name">Arduino</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">🎛️</div>
+                            <div class="skill-name">Control Systems</div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">🌐</div>
+                            <div class="skill-name">Web Dev</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     Experience Section 
+    <section class="experience" id="experience">
+        <div class="container">
+            <div class="section-header">
+                <h2>Experience</h2>
+                <p>My professional journey</p>
+            </div>
+            <div class="experience-timeline">
+                 Updated experience cards with thumbnails and click functionality 
+                <div class="experience-card" onclick="openExperienceModal('exp1')">
+                    <div class="experience-thumbnail">🤖</div>
+                    <div class="experience-content">
+                        <h3>Systems & Mechatronics Intern</h3>
+                        <p class="company">Robotics Lab — University</p>
+                        <p class="date">Summer 2025</p>
+                        <p class="preview">Built ROS-based sensor fusion pipeline for autonomous navigation...</p>
+                    </div>
+                </div>
+                <div class="experience-card" onclick="openExperienceModal('exp2')">
+                    <div class="experience-thumbnail">🔬</div>
+                    <div class="experience-content">
+                        <h3>Undergraduate Researcher</h3>
+                        <p class="company">Control Systems Group</p>
+                        <p class="date">2024 – Present</p>
+                        <p class="preview">Working on state estimation algorithms for dynamic systems...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     Added Blog Section 
+    <section class="blog" id="blog">
+        <div class="container">
+            <div class="section-header">
+                <h2>Blog</h2>
+                <p>Thoughts and insights</p>
+            </div>
+            <div class="blog-grid">
+                <div class="blog-card" onclick="openBlogModal('blog1')">
+                    <div class="blog-thumbnail">📝</div>
+                    <div class="blog-content">
+                        <h3>Getting Started with ROS2</h3>
+                        <p class="blog-date">March 15, 2025</p>
+                        <p class="blog-excerpt">A beginner's guide to setting up and understanding the Robot Operating System 2...</p>
+                    </div>
+                </div>
+                <div class="blog-card" onclick="openBlogModal('blog2')">
+                    <div class="blog-thumbnail">⚡</div>
+                    <div class="blog-content">
+                        <h3>PID Control Explained</h3>
+                        <p class="blog-date">February 28, 2025</p>
+                        <p class="blog-excerpt">Understanding the fundamentals of PID controllers and their applications in robotics...</p>
+                    </div>
+                </div>
+                <div class="blog-card" onclick="openBlogModal('blog3')">
+                    <div class="blog-thumbnail">🎓</div>
+                    <div class="blog-content">
+                        <h3>My First Year in Engineering</h3>
+                        <p class="blog-date">January 10, 2025</p>
+                        <p class="blog-excerpt">Reflections on my freshman year studying Systems & Mechatronics Engineering...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     Projects Section 
+    <section class="projects" id="projects">
+        <div class="container">
+            <div class="section-header">
+                <h2>Projects</h2>
+                <p>Things I've built</p>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>Autonomous Line Following Robot</h3>
+                    <p>A self-navigating robot that uses computer vision and PID control to follow lines with high precision.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">Arduino</span>
+                        <span class="tech-tag">OpenCV</span>
+                        <span class="tech-tag">PID Control</span>
+                        <span class="tech-tag">C++</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Smart Energy Monitor</h3>
+                    <p>IoT device that tracks energy consumption in real-time and sends data to a cloud dashboard.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">ESP32</span>
+                        <span class="tech-tag">MQTT</span>
+                        <span class="tech-tag">IoT</span>
+                        <span class="tech-tag">Python</span>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <h3>Course Planner Web App</h3>
+                    <p>A responsive web application that helps students plan their academic semesters efficiently.</p>
+                    <div class="tech-tags">
+                        <span class="tech-tag">React</span>
+                        <span class="tech-tag">Tailwind CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+     Contact Section 
+    <section class="contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>Get In Touch</h2>
+                <p>Let's connect and collaborate</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-buttons">
+                    <a href="mailto:abdullah@example.com" class="btn btn-primary">Email Me</a>
+                    <a href="https://github.com" target="_blank" class="btn btn-secondary">GitHub</a>
+                    <a href="https://linkedin.com" target="_blank" class="btn btn-secondary">LinkedIn</a>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                    <div class="form-success" id="formSuccess">
+                        Thank you for your message! I'll get back to you soon.
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+     Footer 
+    <footer>
+        <div class="container">
+            <p>© <span id="year"></span> Abdullah Ahmed — Built with precision and passion.</p>
+        </div>
+    </footer>
+
+     Added Modal for Experience Details 
+    <div id="experienceModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeExperienceModal()">&times;</button>
+            <div class="modal-header" id="modalHeader"></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+
+     Added Modal for Blog Posts 
+    <div id="blogModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBlogModal()">&times;</button>
+            <div class="modal-header" id="blogModalHeader"></div>
+            <div class="modal-body" id="blogModalBody"></div>
+        </div>
+    </div>
+
+    <script>
+        const experienceData = {
+            exp1: {
+                title: "Systems & Mechatronics Intern",
+                company: "Robotics Lab — University",
+                date: "Summer 2025",
+                description: `
+                    <h3>Overview</h3>
+                    <p>During my internship at the Robotics Lab, I worked on cutting-edge autonomous navigation systems for mobile robots. This experience gave me hands-on exposure to real-world robotics challenges and collaborative engineering workflows.</p>
+                    
+                    <h3>Key Responsibilities</h3>
+                    <ul>
+                        <li>Built a ROS-based sensor fusion pipeline for autonomous navigation, integrating LiDAR, IMU, and camera data</li>
+                        <li>Designed control logic for a robotic manipulator using PID controllers, achieving 95% accuracy in pick-and-place tasks</li>
+                        <li>Collaborated with a team of 5 engineers on real-time system integration and debugging</li>
+                        <li>Developed Python scripts for data visualization and performance analysis</li>
+                        <li>Participated in weekly design reviews and presented technical findings to senior researchers</li>
+                    </ul>
+                    
+                    <h3>Technologies Used</h3>
+                    <p>ROS, Python, C++, LiDAR, Computer Vision, PID Control, Git, Linux</p>
+                    
+                    <h3>Impact</h3>
+                    <p>The sensor fusion pipeline I developed improved navigation accuracy by 30% and reduced processing latency by 40%, enabling more reliable autonomous operation in complex environments.</p>
+                `
+            },
+            exp2: {
+                title: "Undergraduate Researcher",
+                company: "Control Systems Group",
+                date: "2024 – Present",
+                description: `
+                    <h3>Overview</h3>
+                    <p>As an undergraduate researcher in the Control Systems Group, I'm exploring advanced state estimation techniques for dynamic systems. This role has deepened my understanding of control theory and its practical applications.</p>
+                    
+                    <h3>Research Focus</h3>
+                    <ul>
+                        <li>Worked on state estimation algorithms for dynamic systems, focusing on Kalman filtering and observer design</li>
+                        <li>Developed MATLAB/Simulink models for control system analysis and simulation</li>
+                        <li>Conducted experiments to validate theoretical models against real-world system behavior</li>
+                        <li>Published findings in undergraduate research symposium, receiving recognition for innovative approach</li>
+                        <li>Mentored two freshman students interested in control systems research</li>
+                    </ul>
+                    
+                    <h3>Skills Developed</h3>
+                    <p>MATLAB, Simulink, Control Theory, State Estimation, Technical Writing, Data Analysis, Research Methodology</p>
+                    
+                    <h3>Achievements</h3>
+                    <p>Presented research poster at the annual symposium and received the "Outstanding Undergraduate Research" award. Currently preparing a paper for submission to a student research journal.</p>
+                `
+            }
+        };
+
+        const blogData = {
+            blog1: {
+                title: "Getting Started with ROS2",
+                date: "March 15, 2025",
+                content: `
+                    <p>The Robot Operating System (ROS) has become the de facto standard for robotics development, and ROS2 brings significant improvements in real-time performance, security, and multi-robot systems. In this post, I'll share my journey learning ROS2 and provide a practical guide for beginners.</p>
+                    
+                    <h3>Why ROS2?</h3>
+                    <p>ROS2 addresses many limitations of ROS1, including better support for real-time systems, improved security features, and native support for multi-robot communication. For anyone serious about robotics, learning ROS2 is essential.</p>
+                    
+                    <h3>Getting Started</h3>
+                    <p>The first step is installing ROS2 on your system. I recommend starting with Ubuntu 22.04 and ROS2 Humble, which has long-term support. The installation process is straightforward following the official documentation.</p>
+                    
+                    <h3>Key Concepts</h3>
+                    <ul>
+                        <li><strong>Nodes:</strong> Independent processes that perform computation</li>
+                        <li><strong>Topics:</strong> Named buses for message passing between nodes</li>
+                        <li><strong>Services:</strong> Synchronous request-response communication</li>
+                        <li><strong>Actions:</strong> Asynchronous goal-oriented tasks with feedback</li>
+                    </ul>
+                    
+                    <h3>My First ROS2 Project</h3>
+                    <p>I started by creating a simple publisher-subscriber system to control an LED based on sensor data. This hands-on project helped me understand the fundamentals of ROS2 communication patterns.</p>
+                    
+                    <h3>Resources</h3>
+                    <p>The official ROS2 documentation is excellent, and I also recommend the "ROS2 for Beginners" course on Udemy. Join the ROS Discourse community for help and discussions!</p>
+                `
+            },
+            blog2: {
+                title: "PID Control Explained",
+                date: "February 28, 2025",
+                content: `
+                    <p>PID (Proportional-Integral-Derivative) controllers are fundamental to control systems engineering. Despite their simplicity, they're incredibly powerful and used in everything from thermostats to autonomous vehicles. Let me break down how they work.</p>
+                    
+                    <h3>The Three Components</h3>
+                    <p><strong>Proportional (P):</strong> Responds to the current error. The larger the error, the stronger the correction. Think of it as the immediate reaction to being off-target.</p>
+                    
+                    <p><strong>Integral (I):</strong> Responds to accumulated past errors. This eliminates steady-state error by accounting for persistent biases in the system.</p>
+                    
+                    <p><strong>Derivative (D):</strong> Responds to the rate of change of error. This provides damping and helps prevent overshooting the target.</p>
+                    
+                    <h3>Tuning PID Controllers</h3>
+                    <p>The art of PID control lies in tuning the three gains (Kp, Ki, Kd). I typically start with the Ziegler-Nichols method, then fine-tune based on system response. Here's my process:</p>
+                    
+                    <ul>
+                        <li>Start with Ki and Kd at zero, increase Kp until oscillation occurs</li>
+                        <li>Add derivative gain to reduce oscillation and improve stability</li>
+                        <li>Finally, add integral gain to eliminate steady-state error</li>
+                        <li>Iterate and test under various conditions</li>
+                    </ul>
+                    
+                    <h3>Real-World Application</h3>
+                    <p>In my line-following robot project, I used PID control to keep the robot centered on the line. The proportional term kept it close, the derivative term prevented wobbling, and the integral term corrected for sensor bias. The result was smooth, accurate tracking!</p>
+                    
+                    <h3>Beyond Basic PID</h3>
+                    <p>Once you master basic PID, explore advanced topics like anti-windup, gain scheduling, and cascade control. These techniques handle more complex real-world scenarios.</p>
+                `
+            },
+            blog3: {
+                title: "My First Year in Engineering",
+                date: "January 10, 2025",
+                content: `
+                    <p>As I wrap up my freshman year in Systems & Mechatronics Engineering, I wanted to reflect on the journey so far. It's been challenging, exciting, and incredibly rewarding.</p>
+                    
+                    <h3>The Transition</h3>
+                    <p>Coming into university, I knew engineering would be tough, but I underestimated how different it would be from high school. The pace is faster, the concepts are deeper, and the expectations are higher. But that's exactly what makes it exciting!</p>
+                    
+                    <h3>Key Lessons Learned</h3>
+                    <ul>
+                        <li><strong>Hands-on learning is essential:</strong> Reading textbooks is important, but building projects solidifies understanding like nothing else</li>
+                        <li><strong>Collaboration is key:</strong> Working with classmates on problem sets and projects taught me more than studying alone ever could</li>
+                        <li><strong>Failure is part of the process:</strong> My first robot didn't work. Neither did my second. But each failure taught me something valuable</li>
+                        <li><strong>Time management matters:</strong> Balancing coursework, projects, and research requires careful planning and prioritization</li>
+                    </ul>
+                    
+                    <h3>Favorite Courses</h3>
+                    <p>Introduction to Mechatronics was by far my favorite. We learned about sensors, actuators, and microcontrollers, then applied everything in a semester-long robot project. Seeing theory come to life was incredible.</p>
+                    
+                    <h3>Extracurricular Activities</h3>
+                    <p>Joining the robotics club was one of the best decisions I made. I've met amazing people, worked on cool projects, and learned skills that complement my coursework perfectly.</p>
+                    
+                    <h3>Looking Ahead</h3>
+                    <p>Next year, I'm planning to dive deeper into control systems and explore internship opportunities. I'm also excited to take on more leadership roles in the robotics club and mentor incoming freshmen.</p>
+                    
+                    <h3>Advice for Future Engineers</h3>
+                    <p>If you're considering engineering: do it! It's challenging but incredibly fulfilling. Stay curious, embrace failure, and never stop building things. The journey is just as important as the destination.</p>
+                `
+            }
+        };
+
+        function openExperienceModal(expId) {
+            const modal = document.getElementById('experienceModal');
+            const header = document.getElementById('modalHeader');
+            const body = document.getElementById('modalBody');
+            const exp = experienceData[expId];
+            
+            header.innerHTML = `
+                <h2>${exp.title}</h2>
+                <p class="company">${exp.company}</p>
+                <p class="date">${exp.date}</p>
+            `;
+            body.innerHTML = exp.description;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeExperienceModal() {
+            const modal = document.getElementById('experienceModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function openBlogModal(blogId) {
+            const modal = document.getElementById('blogModal');
+            const header = document.getElementById('blogModalHeader');
+            const body = document.getElementById('blogModalBody');
+            const blog = blogData[blogId];
+            
+            header.innerHTML = `
+                <h2>${blog.title}</h2>
+                <p class="date">${blog.date}</p>
+            `;
+            body.innerHTML = blog.content;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeBlogModal() {
+            const modal = document.getElementById('blogModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const expModal = document.getElementById('experienceModal');
+            const blogModal = document.getElementById('blogModal');
+            if (event.target === expModal) {
+                closeExperienceModal();
+            }
+            if (event.target === blogModal) {
+                closeBlogModal();
+            }
+        }
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
+        }
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    navMenu.classList.remove('active');
+                }
+            });
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navMenu = document.getElementById('navMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+
+        // Contact Form
+        const contactForm = document.getElementById('contactForm');
+        const formSuccess = document.getElementById('formSuccess');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Show success message
+            formSuccess.style.display = 'block';
+            
+            // Reset form
+            contactForm.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                formSuccess.style.display = 'none';
+            }, 5000);
+        });
+
+        // Update year in footer
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.experience-card, .project-card, .blog-card, .skill-item').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
