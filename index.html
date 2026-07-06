@@ -194,10 +194,10 @@
         .hero {
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
             text-align: center;
-            padding-top: 80px;
+            padding-top: 380px;
         }
 
         .hero h1 {
@@ -465,6 +465,36 @@
             background: transparent;
             position: relative;
             z-index: 2;
+        }
+
+        [data-theme="light"] .experience-card--cover .experience-thumbnail {
+            filter: brightness(64%);
+        }
+
+        [data-theme="light"] .experience-card--cover .experience-content {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0.936) 100%);
+            backdrop-filter: blur(.5px);
+            color: var(--text-primary);
+        }
+
+        [data-theme="light"] .experience-card--cover .experience-content .company,
+        [data-theme="light"] .experience-card--cover .experience-content .date,
+        [data-theme="light"] .experience-card--cover .experience-content .preview,
+        [data-theme="light"] .experience-card--cover .experience-content h3 {
+            color: var(--text-primary);
+            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.306);
+        }
+
+        [data-theme="light"] .experience-card--cover-lunabotics::after {
+            background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0.736) 100%);
+        }
+
+        [data-theme="light"] .experience-card--cover-lunabotics .experience-content {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.736) 100%);
+            backdrop-filter: blur(.5px);
+            height: 100%;
+            box-sizing: border-box;
+            color: var(--text-primary);
         }
 
         .experience-card h3 {
@@ -1417,7 +1447,7 @@
         const html = document.documentElement;
         
         // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedTheme = localStorage.getItem('theme') || 'dark';
         html.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
 
