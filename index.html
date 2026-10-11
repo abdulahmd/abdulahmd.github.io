@@ -1,1535 +1,505 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>abdulahmd</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🪐</text></svg>">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            /* Updated color scheme to black/gray/white with engineering aesthetic */
-            --bg-primary: #ffffff;
-            --bg-secondary: #f5f5f5;
-            --text-primary: #0a0a0a;
-            --text-secondary: #525252;
-            --accent: #171717;
-            --accent-hover: #404040;
-            --card-bg: #ffffff;
-            --border: #e5e5e5;
-            --shadow: rgba(0, 0, 0, 0.08);
-            --grid-line: rgba(0, 0, 0, 0.05);
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #0a0a0a;
-            --bg-secondary: #171717;
-            --text-primary: #fafafa;
-            --text-secondary: #a3a3a3;
-            --accent: #fafafa;
-            --accent-hover: #d4d4d4;
-            --card-bg: #171717;
-            --border: #262626;
-            --shadow: rgba(0, 0, 0, 0.5);
-            --grid-line: rgba(255, 255, 255, 0.05);
-        }
-
-        body {
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
-            /* Added engineering grid background */
-            background-image: 
-                linear-gradient(var(--grid-line) 1px, transparent 1px),
-                linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-            background-size: 50px 50px;
-            background-attachment: fixed;
-        }
-
-        /* Removed colorful blob, replaced with subtle geometric pattern */
-        .blob-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            pointer-events: none;
-        }
-
-        .geometric-pattern {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            border: 1px solid var(--grid-line);
-            opacity: 0.3;
-            animation: rotate 30s infinite linear;
-        }
-
-        .geometric-pattern:nth-child(1) {
-            top: 10%;
-            right: 10%;
-            transform: rotate(45deg);
-        }
-
-        .geometric-pattern:nth-child(2) {
-            bottom: 20%;
-            left: 15%;
-            width: 200px;
-            height: 200px;
-            animation-duration: 40s;
-            animation-direction: reverse;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: var(--bg-primary);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            z-index: 1000;
-            transition: background-color 0.3s ease;
-            backdrop-filter: blur(10px);
-            background-color: rgba(255, 255, 255, 0.95);
-        }
-
-        [data-theme="dark"] nav {
-            background-color: rgba(10, 10, 10, 0.95);
-        }
-
-        nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        nav a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-            font-weight: 500;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        nav a:hover {
-            color: var(--accent);
-        }
-
-        .theme-toggle {
-            background: none;
-            border: 2px solid var(--border);
-            color: var(--text-primary);
-            width: 40px;
-            height: 40px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .theme-toggle:hover {
-            border-color: var(--accent);
-            transform: scale(1.05);
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        section {
-            padding: 6rem 0;
-            opacity: 0;
-            animation: fadeIn 0.8s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Hero Section */
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            text-align: center;
-            padding-top: 380px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-            font-weight: 700;
-        }
-
-        .hero .subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .hero .tagline {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .hero-buttons {
-            margin-top: 30px;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .btn-primary {
-            background-color: var(--accent);
-            color: var(--bg-primary);
-            border: 2px solid var(--accent);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--text-primary);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        /* Section Headers */
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-            font-weight: 700;
-        }
-
-        .section-header p {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-        }
-
-        /* Updated About Section with profile picture and skills */
-        .about {
-            background-color: var(--bg-secondary);
-        }
-
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .about-intro {
-            display: flex;
-            gap: 3rem;
-            align-items: center;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .profile-picture {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
-            background-color: var(--border);
-            border: 3px solid var(--accent);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            color: var(--text-secondary);
-        }
-
-        .about-text {
-            flex: 1;
-            min-width: 300px;
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
-        .about-text p {
-            margin-bottom: 1rem;
-        }
-
-        .skills-section {
-            margin-top: 3rem;
-        }
-
-        .skills-section h3 {
-            font-size: 1.8rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 2rem;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .skill-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1.5rem;
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .skill-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 12px var(--shadow);
-            border-color: var(--accent);
-        }
-
-        .skill-icon {
-            font-size: 3rem;
-        }
-
-        .skill-name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: center;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* Updated Experience Section with thumbnails and modal */
-        .experience-timeline {
-            max-width: 900px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .experience-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .experience-card--cover {
-            position: relative;
-            min-height: 170px;
-        }
-
-        .experience-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow);
-            border-color: var(--accent);
-        }
-
-        /* .experience-thumbnail {
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--border));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            border-bottom: 1px solid var(--border);
-        } */
-
-        .experience-card--cover .experience-thumbnail {
-            position: absolute;
-            inset: 0;
-            height: 100%;
-            border-bottom: 0;
-            filter: brightness(60%);
-        }
-
-        .experience-card--cover .experience-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .experience-content {
-            padding: 1.5rem;
-        }
-
-        .experience-card--cover .experience-content {
-            position: relative;
-            z-index: 1;
-            min-height: 170px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, .85) 100%);
-            color: #ffffff;
-        }
-
-        .experience-card--cover .experience-content .company,
-        .experience-card--cover .experience-content .date,
-        .experience-card--cover .experience-content .preview,
-        .experience-card--cover .experience-content h3 {
-            color: #ffffff;
-        }
-
-        .experience-card--cover-lunabotics::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.92) 100%);
-            pointer-events: none;
-        }
-
-        .experience-card--cover-lunabotics .experience-content {
-            background: transparent;
-            position: relative;
-            z-index: 2;
-        }
-
-        [data-theme="light"] .experience-card--cover .experience-thumbnail {
-            filter: brightness(64%);
-        }
-
-        [data-theme="light"] .experience-card--cover .experience-content {
-            background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0.936) 100%);
-            backdrop-filter: blur(.5px);
-            color: var(--text-primary);
-        }
-
-        [data-theme="light"] .experience-card--cover .experience-content .company,
-        [data-theme="light"] .experience-card--cover .experience-content .date,
-        [data-theme="light"] .experience-card--cover .experience-content .preview,
-        [data-theme="light"] .experience-card--cover .experience-content h3 {
-            color: var(--text-primary);
-            text-shadow: 0 1px 0 rgba(255, 255, 255, 0.306);
-        }
-
-        [data-theme="light"] .experience-card--cover-lunabotics::after {
-            background: linear-gradient(180deg, rgba(255, 255, 255, .08) 0%, rgba(255, 255, 255, 0.736) 100%);
-        }
-
-        [data-theme="light"] .experience-card--cover-lunabotics .experience-content {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.736) 100%);
-            backdrop-filter: blur(.5px);
-            height: 100%;
-            box-sizing: border-box;
-            color: var(--text-primary);
-        }
-
-        .experience-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .experience-card .company {
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 0.25rem;
-            font-size: 0.95rem;
-        }
-
-        .experience-card .date {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-        }
-
-        .experience-card .preview {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            margin: 5% auto;
-            padding: 2rem;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            width: 90%;
-            max-width: 700px;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--text-secondary);
-            cursor: pointer;
-            background: none;
-            border: none;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-        }
-
-        .modal-header {
-            margin-bottom: 1.5rem;
-            padding-right: 2rem;
-        }
-
-        .modal-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif
-        }
-
-        .modal-header .company {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-
-        .modal-header .date {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        .modal-body {
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .modal-body h3 {
-            font-size: 1.2rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-        }
-
-        .modal-body ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .modal-body li {
-            padding-left: 1.5rem;
-            position: relative;
-            margin-bottom: 0.75rem;
-        }
-
-        .modal-body li::before {
-            content: "▹";
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-        }
-
-        /* Added Blog Section */
-        .blog {
-            background-color: var(--bg-primary);
-        }
-
-        .blog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .blog-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .blog-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow);
-            border-color: var(--accent);
-        }
-
-        .blog-thumbnail {
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(135deg, var(--bg-secondary), var(--border));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 4rem;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .blog-content {
-            padding: 1.5rem;
-        }
-
-        .blog-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .blog-card .blog-date {
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .blog-card .blog-excerpt {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        /* Projects Section */
-        .projects {
-            background-color: var(--bg-secondary);
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .project-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 0; /* Changed from 2rem to 0 for thumbnail/content structure */
-            transition: all 0.3s ease;
-            cursor: pointer;
-            overflow: hidden; /* Added to contain thumbnail */
-        }
-
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--shadow);
-            border-color: var(--accent);
-        }
-
-        .project-card h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .project-card p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .project-card .preview { /* Added for the shorter preview in the grid */
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .tech-tag {
-            background-color: var(--bg-secondary);
-            color: var(--text-primary);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            border: 1px solid var(--border);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* Contact Section */
-        .contact-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contact-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 3rem;
-            flex-wrap: wrap;
-        }
-
-        .contact-form {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 2rem;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border);
-            border-radius: 4px;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        .form-success {
-            display: none;
-            background-color: var(--accent);
-            color: var(--bg-primary);
-            padding: 1rem;
-            border-radius: 4px;
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        /* Footer */
-        footer {
-            background-color: var(--bg-secondary);
-            padding: 2rem 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-        }
-
-        footer p {
-            color: var(--text-secondary);
-            font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background-color: var(--bg-primary);
-                flex-direction: column;
-                padding: 1rem;
-                border-bottom: 1px solid var(--border);
-            }
-
-            nav ul.active {
-                display: flex;
-            }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero .subtitle {
-                font-size: 1.2rem;
-            }
-
-            section {
-                padding: 4rem 0;
-            }
-
-            .projects-grid,
-            .experience-timeline,
-            .blog-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .about-intro {
-                flex-direction: column;
-            }
-
-            .skills-grid {
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-                gap: 1rem;
-            }
-
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-                padding: 1.5rem;
-            }
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Abdullah Ahmed | Robotics &amp; Systems Engineer</title>
+<meta name="description" content="Abdullah Ahmed: systems engineering student at UT Dallas working on multi-agent robotics, embedded systems and functional safety.">
+<meta property="og:title" content="Abdullah Ahmed">
+<meta property="og:description" content="Robotics, autonomy, embedded systems and functional safety.">
+<meta property="og:image" content="https://abdulahmd.github.io/abdulahmd.jpeg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='black'/%3E%3Ccircle cx='32' cy='32' r='13' fill='white'/%3E%3Cellipse cx='32' cy='32' rx='27' ry='7' fill='none' stroke='white' stroke-width='3' transform='rotate(-25 32 32)'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #000000;
+    --white: #ffffff;
+    --text: #d4d4d4;
+    --muted: #8f8f8f;
+    --rule: #2a2a2a;
+    --display: "Archivo", "Arial Narrow", sans-serif;
+    --body: "IBM Plex Sans", system-ui, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, monospace;
+    --col: min(40rem, 100%);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--void);
+    color: var(--text);
+    font: 400 1.0625rem/1.65 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--white); text-underline-offset: 0.22em; text-decoration-thickness: 1px; text-decoration-color: var(--muted); }
+  a:hover { text-decoration-color: var(--white); }
+  :focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
+  img { display: block; max-width: 100%; }
+
+  /* 3D scene sits behind everything */
+  #space { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  /* gradient keeps the text column readable over the planet */
+  .veil {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.72) 38%, rgba(0,0,0,0) 62%);
+  }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.25rem clamp(1rem, 4vw, 3rem) 2rem;
+    font-size: 0.9375rem;
+    background: linear-gradient(180deg, rgba(0,0,0,.95) 0%, rgba(0,0,0,.7) 60%, rgba(0,0,0,0) 100%);
+  }
+  nav .mark { font: 700 1.05rem/1 var(--display); font-stretch: 125%; color: var(--white); text-decoration: none; letter-spacing: -0.01em; }
+  nav ul { list-style: none; display: flex; gap: 1.75rem; margin: 0; padding: 0; }
+  nav ul a { color: var(--muted); text-decoration: none; }
+  nav ul a:hover, nav ul a[aria-current="true"] { color: var(--white); }
+
+  main { position: relative; z-index: 2; padding: 0 clamp(1rem, 4vw, 3rem); }
+  section { max-width: var(--col); padding: 7rem 0 2rem; }
+
+  /* ---------- hero ---------- */
+  .hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; padding-bottom: 14vh; max-width: 56rem; }
+  .hero h1 {
+    margin: 0;
+    font-family: var(--display); font-weight: 800; font-stretch: 125%;
+    font-size: clamp(3.25rem, 10.5vw, 9.5rem);
+    line-height: 0.86; letter-spacing: -0.035em;
+    color: var(--white);
+  }
+  .hero h1 span { display: block; }
+  .hero h1 .outline { color: transparent; -webkit-text-stroke: 1.5px var(--white); }
+  .hero p.lede { max-width: 31rem; margin: 2rem 0 1.75rem; font-size: 1.1875rem; line-height: 1.55; color: var(--text); }
+  .links { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; margin: 0; padding: 0; list-style: none; }
+  .links a { font-weight: 500; }
+
+  /* ---------- headings ---------- */
+  h2 {
+    margin: 0 0 2rem;
+    font: 700 clamp(1.9rem, 4vw, 2.75rem)/1 var(--display); font-stretch: 118%;
+    letter-spacing: -0.02em; color: var(--white);
+  }
+  h3 { margin: 0; font: 600 1.125rem/1.35 var(--body); color: var(--white); }
+  p { margin: 0 0 1rem; }
+
+  /* ---------- experience ---------- */
+  .roles { list-style: none; margin: 0; padding: 0; }
+  .role { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.25rem; padding: 1.5rem 0; border-top: 1px solid var(--rule); }
+  .role:last-child { border-bottom: 1px solid var(--rule); }
+  .role img { width: 7.5rem; aspect-ratio: 4/3; object-fit: cover; filter: grayscale(1) contrast(1.1); border: 1px solid var(--rule); }
+  .role .thumb-blank { width: 7.5rem; aspect-ratio: 4/3; border: 1px dashed var(--rule); display: grid; place-items: center; color: var(--muted); font: 400 0.75rem var(--mono); }
+  .role .where { color: var(--muted); font-size: 0.9375rem; margin: 0.15rem 0 0.6rem; }
+  .role p:last-child { margin: 0; }
+
+  /* ---------- projects ---------- */
+  .project { padding: 1.75rem 0; border-top: 1px solid var(--rule); }
+  .project:last-of-type { border-bottom: 1px solid var(--rule); }
+  .project .status { color: var(--muted); font-size: 0.9375rem; margin: 0.15rem 0 0.75rem; }
+  .project ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
+  .project li { margin-bottom: 0.35rem; }
+  .project li::marker { color: var(--muted); }
+  .stack { margin-top: 0.9rem; color: var(--muted); font: 400 0.875rem/1.5 var(--mono); }
+
+  /* ---------- spec sheet ---------- */
+  .spec { display: grid; grid-template-columns: 9rem 1fr; margin: 0; border-top: 1px solid var(--rule); }
+  .spec dt, .spec dd { margin: 0; padding: 0.9rem 0; border-bottom: 1px solid var(--rule); }
+  .spec dt { color: var(--muted); }
+  .spec dd { color: var(--white); }
+
+  /* ---------- contact ---------- */
+  .contact { padding-bottom: 6rem; }
+  .contact .big {
+    display: inline-block; margin: 0.5rem 0 2rem;
+    font: 700 clamp(1.35rem, 3.6vw, 2.25rem)/1.15 var(--display); font-stretch: 112%;
+    word-break: break-word;
+  }
+  footer { position: relative; z-index: 2; padding: 2rem clamp(1rem, 4vw, 3rem) 2.5rem; color: var(--muted); font-size: 0.875rem; }
+
+  /* ---------- live telemetry readout ---------- */
+  .hud {
+    position: fixed; right: clamp(1rem, 4vw, 3rem); bottom: 1.5rem; z-index: 3;
+    font: 400 0.75rem/1.7 var(--mono); color: var(--muted);
+    display: grid; grid-template-columns: auto auto; gap: 0 1.25rem;
+    padding-top: 0.6rem; border-top: 1px solid var(--rule);
+    pointer-events: none;
+  }
+  .hud b { font-weight: 500; color: var(--white); text-align: right; font-variant-numeric: tabular-nums; }
+
+  @media (max-width: 900px) {
+    .veil { background: rgba(0,0,0,.62); }
+    nav ul { gap: 1.1rem; }
+    nav ul li.opt { display: none; }
+    .hud { display: none; }
+  }
+  @media (max-width: 520px) {
+    body { font-size: 1rem; }
+    nav ul { display: none; }
+    .role { grid-template-columns: 1fr; }
+    .role img, .role .thumb-blank { width: 100%; aspect-ratio: 16/7; }
+    .spec { grid-template-columns: 1fr; }
+    .spec dt { border-bottom: 0; padding-bottom: 0; }
+  }
+</style>
 </head>
 <body>
-    <div class="blob-container">
-        <div class="geometric-pattern"></div>
-        <div class="geometric-pattern"></div>
-    </div>
-    <nav>
-        <div class="container">
-            <div class="logo">abdulahmd</div>
-            <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
-            <ul id="navMenu">
-                <li><a href="#about">About</a></li>
-                <li><a href="#experience">Experience</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><button class="theme-toggle" id="themeToggle">🌑</button></li>
-            </ul>
+<canvas id="space" aria-hidden="true"></canvas>
+<div class="veil"></div>
+
+<nav aria-label="Primary">
+  <a class="mark" href="#top">AA</a>
+  <ul>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li class="opt"><a href="#systems">Systems</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<main id="top">
+  <section class="hero" data-phase="Approach">
+    <h1><span>Abdullah</span><span class="outline">Ahmed</span></h1>
+    <p class="lede">Systems engineering student at UT Dallas. I build robots that keep working when parts of them don't: multi-agent control, embedded systems, and functional safety.</p>
+    <ul class="links">
+      <li><a href="https://drive.google.com/file/d/1jvkq7n_vZGPys0mkO-rqCesTGeyzKJkA/preview" target="_blank" rel="noopener">Résumé</a></li>
+      <li><a href="https://github.com/abdulahmd" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/abdulahmd" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="mailto:abdullah.ahmed2@utdallas.edu">Email</a></li>
+    </ul>
+  </section>
+
+  <section id="experience" data-phase="Ring plane crossing">
+    <h2>Experience</h2>
+    <ul class="roles">
+      <li class="role">
+        <div class="thumb-blank">FuSa</div>
+        <div>
+          <h3>Functional Safety Systems Engineer (incoming)</h3>
+          <p class="where">Reynolds &amp; Moore</p>
+          <p>Functional safety for physical AI and autonomous systems: making machines fail in ways that are predictable and safe.</p>
         </div>
-    </nav>
-
-    <section class="hero" id="home">
-        <div class="container">
-            <div>
-                <h1>Hello, I'm Abdullah Ahmed 🪐</h1>
-                <p class="subtitle"><strong>Systems & Robotics Engineer</strong></p>
-                <div class="hero-buttons">
-                    <a href="https://github.com/abdulahmd" target="_blank" class="btn btn-secondary">GitHub</a>
-                    <a href="https://www.linkedin.com/in/abdullah-ahmed-27917627b/" target="_blank" class="btn btn-secondary">LinkedIn</a>
-                    <a href="mailto:abdulahmd0@icloud.com" class="btn btn-secondary">Email Me</a>
-                    <a href="https://drive.google.com/file/d/1jvkq7n_vZGPys0mkO-rqCesTGeyzKJkA/preview" class="btn btn-secondary">Resume</a>
-                </div>
-            </div>
+      </li>
+      <li class="role">
+        <img src="https://abdulahmd.github.io/cirens_cover.jpeg" alt="Clearpath Jackal rover in the CIrENs lab" loading="lazy">
+        <div>
+          <h3>Multi-Agent Robotics Researcher</h3>
+          <p class="where">CIrENs Lab, UT Dallas, 2025 to present</p>
+          <p>Control and resilience in heterogeneous robot networks. SLAM and sensor integration on the Clearpath Jackal, including PTP clock sync with an Ouster LiDAR.</p>
         </div>
-    </section>
-
-    <section class="about" id="about">
-        <div class="container">
-            <div class="section-header">
-                <h2>About Me</h2>
-            </div>
-            <div class="about-content">
-                <div class="about-intro">
-                    <div class="profile-picture">
-                        <image src="abdulahmd.jpeg" alt="Abdullah Ahmed" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                    </div>
-                    <div class="about-text">
-                        <p>Systems & Robotics Engineering Student conducting research in Multi-Agent Systems, Autonomous Robotics, Controls, and Perception.</p>
-                    </div>
-                </div>
-
-                <div class="skills-section">
-                    <h3>Skills & Technologies</h3>
-                    <div class="skills-grid">
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://img.icons8.com/?size=100&id=62397&format=png&color=000000"></img></div>
-                            <div class="skill-name">SolidWorks</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon">🤖</div>
-                            <div class="skill-name">ROS2</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://img.icons8.com/?size=100&id=40669&format=png&color=000000"></img></div>
-                            <div class="skill-name">C/C++</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://img.icons8.com/?size=100&id=13441&format=png&color=000000"></img></div>
-                            <div class="skill-name">Python</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://static.vecteezy.com/system/resources/thumbnails/048/332/150/small/java-programming-language-java-logo-free-png.png"></img></div>
-                            <div class="skill-name">Java</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src=https://img.icons8.com/?size=100&id=r5Y16PcDkoWI&format=png&color=000000></img></div>
-                            <div class="skill-name">MATLAB</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/KiCad_logo_square.svg/3840px-KiCad_logo_square.svg.png"></img></div>
-                            <div class="skill-name">KiCAD</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon">🎛️</div>
-                            <div class="skill-name">Control Systems</div>
-                        </div>
-                        <div class="skill-item">
-                            <div class="skill-icon"><img style=width:60px src="https://icon.icepanel.io/Technology/svg/Git.svg"></img></div>
-                            <div class="skill-name">Git</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </li>
+      <li class="role">
+        <img src="https://abdulahmd.github.io/lunabotics_cover.png" alt="Comet Lunabotics rover" loading="lazy">
+        <div>
+          <h3>Embedded Systems Engineer</h3>
+          <p class="where">AIAA Comet Lunabotics, 2025 to present</p>
+          <p>ROS 2 subsystems for a Jetson-based lunar excavation rover, with micro-ROS on ESP32 over CAN.</p>
         </div>
-    </section>
-
-    <section class="experience" id="experience">
-        <div class="container">
-            <div class="section-header">
-                <h2>Experience</h2>
-            </div>
-            <div class="experience-timeline">
-                <div class="experience-card experience-card--cover" onclick="openExperienceModal('exp1')">
-                    <div class="experience-thumbnail"><img src="cirens_cover.jpeg" alt="CIReNs Lab cover" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
-                    <div class="experience-content">
-                        <h3>Autonomous Systems Researcher</h3>
-                        <p class="company">CIReNs Lab</p>
-                        <p class="date">2025 – Present</p>
-                        <p class="preview">Working on a SLAM Algorithm for the Clearpath Jackal Robot</p>
-                    </div>
-                </div>
-                <div class="experience-card experience-card--cover experience-card--cover-lunabotics" onclick="openExperienceModal('exp2')">
-                    <div class="experience-thumbnail"><img src="lunabotics_cover.png" alt="Lunabotics cover" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
-                    <div class="experience-content">
-                        <h3>Embedded Systems Engineer</h3>
-                        <p class="company">Comet Aerobotics - AIAA</p>
-                        <p class="date">2025 - Present</p>
-                        <p class="preview">Built ROS-based subsystems for a Jetson based rover</p>
-                    </div>
-                </div>
-                <div class="experience-card experience-card--cover" onclick="openExperienceModal('exp3')">
-                    <div class="experience-thumbnail"><img src="megadrone_cover.png" alt="Megadrone cover" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
-                    <div class="experience-content">
-                        <h3>Drone Software Systems Researcher</h3>
-                        <p class="company">Aerospace Research Corps - AIAA</p>
-                        <p class="date">2025 - Present</p>
-                        <p class="preview">Worked with PX4 software to program a large drone</p>
-                    </div>
-                </div>
-            </div>
+      </li>
+      <li class="role">
+        <img src="https://abdulahmd.github.io/megadrone_cover.png" alt="Large research drone" loading="lazy">
+        <div>
+          <h3>Drone Software Systems Researcher</h3>
+          <p class="where">AIAA Aerospace Research Corps, 2025 to present</p>
+          <p>PX4 flight software for a large-format drone.</p>
         </div>
-    </section>
+      </li>
+    </ul>
+  </section>
 
-    <!-- <section class="projects" id="projects">
-        <div class="container">
-            <div class="section-header">
-                <h2>Projects</h2>
-            </div>
-            <div class="projects-grid">
-                <div class="project-card" onclick="openProjectModal('proj1')">
-                    <div class="experience-thumbnail"><img src="autohawk_cover.jpeg" alt="AutoHawk cover" style="width: 100%; height: 100%; object-fit: cover; display: block;"></div>
-                    <div class="experience-content">
-                        <h3>AutoHawk</h3>
-                        <p class="preview">An Autonomous Weather Drone using a Carbon Dioxide Sensor and PID Control</p>
-                        <div class="tech-tags">
-                            <span class="tech-tag">Pixhawk</span>
-                            <span class="tech-tag">Python</span>
-                            <span class="tech-tag">PID Control</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section> -->
+  <section id="projects" data-phase="Cassini division">
+    <h2>Projects</h2>
 
-    <section class="contact" id="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2>Get In Touch</h2>
-            </div>
-            <div class="contact-content">
-                <div class="contact-buttons">
-                    <a href="mailto:abdullah@example.com" class="btn btn-secondary">Email Me</a>
-                    <a href="https://github.com" target="_blank" class="btn btn-secondary">GitHub</a>
-                    <a href="https://linkedin.com" target="_blank" class="btn btn-secondary">LinkedIn</a>
-                </div>
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
-                    <div class="form-success" id="formSuccess">
-                        Thank you for your message! I'll get back to you soon.
-                    </div>
-                </form>
-            </div>
-        </div>
-    </section>
+    <article class="project">
+      <h3>Crazyflie deployment pod for the Clearpath Jackal</h3>
+      <p class="status">CIrENs Lab, in progress</p>
+      <p>A ground rover that carries and launches a small drone swarm. Servo-lidded pods on a parametric frame, driven by an ESP32 off the Jackal's power rail.</p>
+      <ul>
+        <li>Parametric OpenSCAD frame: 450 × 323 mm ring, 140 mm pods with optical-flow sensor openings</li>
+        <li>ESP32 with MG90S servos and transistor-switched status LEDs, buck-converted from the Jackal's 12 V rail</li>
+        <li>PTP time sync (linuxptp) between an Ouster LiDAR and the Jackal for aligned scans</li>
+      </ul>
+      <p class="stack">ESP32, OpenSCAD, KiCad, ROS 2, linuxptp, Ouster</p>
+    </article>
 
-    <footer>
-        <div class="container">
-            <p>© <span id="year"></span> Abdullah Ahmed — Built with precision and passion.</p>
-        </div>
-    </footer>
+    <article class="project">
+      <h3>Graceful degradation in heterogeneous swarms</h3>
+      <p class="status">Research, targeting ICRA</p>
+      <p>How a mixed team of aerial and ground robots keeps the mission going as individual agents fail. Built on a Crazyflie swarm paired with the Jackal.</p>
+      <p class="stack">Crazyflie, Clearpath Jackal, multi-agent control</p>
+    </article>
 
-    <div id="experienceModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeExperienceModal()">&times;</button>
-            <div class="modal-header" id="modalHeader"></div>
-            <div class="modal-body" id="modalBody"></div>
-        </div>
-    </div>
+    <article class="project">
+      <h3>AprilTag drift-correction localizer</h3>
+      <p class="status">NASA Lunabotics 2026</p>
+      <p>Wheel odometry drifts in regolith. This ROS 2 node spots AprilTags (36h11) and applies a persistent offset correction so the rover's pose stays honest over a full run.</p>
+      <ul>
+        <li>Zone detector node publishing per-zone Boolean topics from odometry</li>
+        <li>micro-ROS on ESP32 bridged to the Jetson over CAN</li>
+      </ul>
+      <p class="stack">ROS 2, Jetson, micro-ROS, OpenCV, pupil-apriltags</p>
+    </article>
 
-     <!-- Added Modal for Blog Posts -->
-    <div id="blogModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeBlogModal()">&times;</button>
-            <div class="modal-header" id="blogModalHeader"></div>
-            <div class="modal-body" id="blogModalBody"></div>
-        </div>
-    </div>
+    <article class="project">
+      <h3>FTC vision pipeline</h3>
+      <p class="status">FIRST Tech Challenge</p>
+      <p>Moved game-piece detection from a webcam OpenCV pipeline to a Limelight 3A with Pedro Pathing retargeting on the fly. HSV detection for green and magenta, including hue-wrap handling.</p>
+      <p class="stack">Java, Limelight 3A, Pedro Pathing, OpenCV</p>
+    </article>
+  </section>
 
-    <!-- Added modal for project details -->
-    <div id="projectModal" class="modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeProjectModal()">&times;</button>
-            <div class="modal-header" id="projectModalHeader"></div>
-            <div class="modal-body" id="projectModalBody"></div>
-        </div>
-    </div>
+  <section id="systems" data-phase="Close orbit">
+    <h2>Onboard systems</h2>
+    <dl class="spec">
+      <dt>Languages</dt><dd>C++, Python, C, C#, Java, Bash, MATLAB</dd>
+      <dt>Robotics</dt><dd>ROS 2, Nav2, micro-ROS, SLAM, Gazebo, Isaac Sim, OpenCV, PX4</dd>
+      <dt>Hardware</dt><dd>ESP32, Jetson, Raspberry Pi, CAN, KiCad, Onshape, SolidWorks</dd>
+      <dt>Practice</dt><dd>Control systems, functional safety, Linux, Docker, Git</dd>
+      <dt>Education</dt><dd>B.S. Systems Engineering, UT Dallas</dd>
+    </dl>
+  </section>
 
-    <script>
-        const experienceData = {
-            exp1: {
-                title: "Systems & Mechatronics Intern",
-                company: "Robotics Lab — University",
-                date: "Summer 2025",
-                description: `
-                    <h3>Overview</h3>
-                    <p>During my internship at the Robotics Lab, I worked on cutting-edge autonomous navigation systems for mobile robots. This experience gave me hands-on exposure to real-world robotics challenges and collaborative engineering workflows.</p>
-                    
-                    <h3>Key Responsibilities</h3>
-                    <ul>
-                        <li>Built a ROS-based sensor fusion pipeline for autonomous navigation, integrating LiDAR, IMU, and camera data</li>
-                        <li>Designed control logic for a robotic manipulator using PID controllers, achieving 95% accuracy in pick-and-place tasks</li>
-                        <li>Collaborated with a team of 5 engineers on real-time system integration and debugging</li>
-                        <li>Developed Python scripts for data visualization and performance analysis</li>
-                        <li>Participated in weekly design reviews and presented technical findings to senior researchers</li>
-                    </ul>
-                    
-                    <h3>Technologies Used</h3>
-                    <p>ROS, Python, C++, LiDAR, Computer Vision, PID Control, Git, Linux</p>
-                    
-                    <h3>Impact</h3>
-                    <p>The sensor fusion pipeline I developed improved navigation accuracy by 30% and reduced processing latency by 40%, enabling more reliable autonomous operation in complex environments.</p>
-                `
-            },
-            exp2: {
-                title: "Undergraduate Researcher",
-                company: "Control Systems Group",
-                date: "2024 – Present",
-                description: `
-                    <h3>Overview</h3>
-                    <p>As an undergraduate researcher in the Control Systems Group, I'm exploring advanced state estimation techniques for dynamic systems. This role has deepened my understanding of control theory and its practical applications.</p>
-                    
-                    <h3>Research Focus</h3>
-                    <ul>
-                        <li>Worked on state estimation algorithms for dynamic systems, focusing on Kalman filtering and observer design</li>
-                        <li>Developed MATLAB/Simulink models for control system analysis and simulation</li>
-                        <li>Conducted experiments to validate theoretical models against real-world system behavior</li>
-                        <li>Published findings in undergraduate research symposium, receiving recognition for innovative approach</li>
-                        <li>Mentored two freshman students interested in control systems research</li>
-                    </ul>
-                    
-                    <h3>Skills Developed</h3>
-                    <p>MATLAB, Simulink, Control Theory, State Estimation, Technical Writing, Data Analysis, Research Methodology</p>
-                    
-                    <h3>Achievements</h3>
-                    <p>Presented research poster at the annual symposium and received the "Outstanding Undergraduate Research" award. Currently preparing a paper for submission to a student research journal.</p>
-                `
-            }
-        };
+  <section id="contact" class="contact" data-phase="Departure">
+    <h2>Open a channel</h2>
+    <p>Looking for robotics and embedded systems internships, especially in aerospace and defense. The fastest way to reach me is email.</p>
+    <a class="big" href="mailto:abdullah.ahmed2@utdallas.edu">abdullah.ahmed2@utdallas.edu</a>
+    <ul class="links">
+      <li><a href="https://www.linkedin.com/in/abdulahmd" target="_blank" rel="noopener">LinkedIn</a></li>
+      <li><a href="https://github.com/abdulahmd" target="_blank" rel="noopener">GitHub</a></li>
+      <li><a href="https://drive.google.com/file/d/1jvkq7n_vZGPys0mkO-rqCesTGeyzKJkA/preview" target="_blank" rel="noopener">Résumé</a></li>
+    </ul>
+  </section>
+</main>
 
-        const blogData = {
-            blog1: {
-                title: "Getting Started with ROS2",
-                date: "March 15, 2025",
-                content: `
-                    <p>The Robot Operating System (ROS) has become the de facto standard for robotics development, and ROS2 brings significant improvements in real-time performance, security, and multi-robot systems. In this post, I'll share my journey learning ROS2 and provide a practical guide for beginners.</p>
-                    
-                    <h3>Why ROS2?</h3>
-                    <p>ROS2 addresses many limitations of ROS1, including better support for real-time systems, improved security features, and native support for multi-robot communication. For anyone serious about robotics, learning ROS2 is essential.</p>
-                    
-                    <h3>Getting Started</h3>
-                    <p>The first step is installing ROS2 on your system. I recommend starting with Ubuntu 22.04 and ROS2 Humble, which has long-term support. The installation process is straightforward following the official documentation.</p>
-                    
-                    <h3>Key Concepts</h3>
-                    <ul>
-                        <li><strong>Nodes:</strong> Independent processes that perform computation</li>
-                        <li><strong>Topics:</strong> Named buses for message passing between nodes</li>
-                        <li><strong>Services:</strong> Synchronous request-response communication</li>
-                        <li><strong>Actions:</strong> Asynchronous goal-oriented tasks with feedback</li>
-                    </ul>
-                    
-                    <h3>My First ROS2 Project</h3>
-                    <p>I started by creating a simple publisher-subscriber system to control an LED based on sensor data. This hands-on project helped me understand the fundamentals of ROS2 communication patterns.</p>
-                    
-                    <h3>Resources</h3>
-                    <p>The official ROS2 documentation is excellent, and I also recommend the "ROS2 for Beginners" course on Udemy. Join the ROS Discourse community for help and discussions!</p>
-                `
-            },
-            blog2: {
-                title: "PID Control Explained",
-                date: "February 28, 2025",
-                content: `
-                    <p>PID (Proportional-Integral-Derivative) controllers are fundamental to control systems engineering. Despite their simplicity, they're incredibly powerful and used in everything from thermostats to autonomous vehicles. Let me break down how they work.</p>
-                    
-                    <h3>The Three Components</h3>
-                    <p><strong>Proportional (P):</strong> Responds to the current error. The larger the error, the stronger the correction. Think of it as the immediate reaction to being off-target.</p>
-                    
-                    <p><strong>Integral (I):</strong> Responds to accumulated past errors. This eliminates steady-state error by accounting for persistent biases in the system.</p>
-                    
-                    <p><strong>Derivative (D):</strong> Responds to the rate of change of error. This provides damping and helps prevent overshooting the target.</p>
-                    
-                    <h3>Tuning PID Controllers</h3>
-                    <p>The art of PID control lies in tuning the three gains (Kp, Ki, Kd). I typically start with the Ziegler-Nichols method, then fine-tune based on system response. Here's my process:</p>
-                    
-                    <ul>
-                        <li>Start with Ki and Kd at zero, increase Kp until oscillation occurs</li>
-                        <li>Add derivative gain to reduce oscillation and improve stability</li>
-                        <li>Finally, add integral gain to eliminate steady-state error</li>
-                        <li>Iterate and test under various conditions</li>
-                    </ul>
-                    
-                    <h3>Real-World Application</h3>
-                    <p>In my line-following robot project, I used PID control to keep the robot centered on the line. The proportional term kept it close, the derivative term prevented wobbling, and the integral term corrected for sensor bias. The result was smooth, accurate tracking!</p>
-                    
-                    <h3>Beyond Basic PID</h3>
-                    <p>Once you master basic PID, explore advanced topics like anti-windup, gain scheduling, and cascade control. These techniques handle more complex real-world scenarios.</p>
-                `
-            },
-            blog3: {
-                title: "My First Year in Engineering",
-                date: "January 10, 2025",
-                content: `
-                    <p>As I wrap up my freshman year in Systems & Mechatronics Engineering, I wanted to reflect on the journey so far. It's been challenging, exciting, and incredibly rewarding.</p>
-                    
-                    <h3>The Transition</h3>
-                    <p>Coming into university, I knew engineering would be tough, but I underestimated how different it would be from high school. The pace is faster, the concepts are deeper, and the expectations are higher. But that's exactly what makes it exciting!</p>
-                    
-                    <h3>Key Lessons Learned</h3>
-                    <ul>
-                        <li><strong>Hands-on learning is essential:</strong> Reading textbooks is important, but building projects solidifies understanding like nothing else</li>
-                        <li><strong>Collaboration is key:</strong> Working with classmates on problem sets and projects taught me more than studying alone ever could</li>
-                        <li><strong>Failure is part of the process:</strong> My first robot didn't work. Neither did my second. But each failure taught me something valuable</li>
-                        <li><strong>Time management matters:</strong> Balancing coursework, projects, and research requires careful planning and prioritization</li>
-                    </ul>
-                    
-                    <h3>Favorite Courses</h3>
-                    <p>Introduction to Mechatronics was by far my favorite. We learned about sensors, actuators, and microcontrollers, then applied everything in a semester-long robot project. Seeing theory come to life was incredible.</p>
-                    
-                    <h3>Extracurricular Activities</h3>
-                    <p>Joining the robotics club was one of the best decisions I made. I've met amazing people, worked on cool projects, and learned skills that complement my coursework perfectly.</p>
-                    
-                    <h3>Looking Ahead</h3>
-                    <p>Next year, I'm planning to dive deeper into control systems and explore internship opportunities. I'm also excited to take on more leadership roles in the robotics club and mentor incoming freshmen.</p>
-                    
-                    <h3>Advice for Future Engineers</h3>
-                    <p>If you're considering engineering: do it! It's challenging but incredibly fulfilling. Stay curious, embrace failure, and never stop building things. The journey is just as important as the destination.</p>
-                `
-            }
-        };
+<footer>© <span id="yr"></span> Abdullah Ahmed. Saturn here is <span id="pts">a few thousand</span> points, rendered live, roughly to scale.</footer>
 
-        const projectData = {
-            proj1: {
-                title: "Autonomous Line Following Robot",
-                description: `
-                    <h3>Overview</h3>
-                    <p>This project involved designing and building a fully autonomous robot capable of following lines with high precision. The robot uses computer vision to detect the line and PID control to maintain accurate tracking.</p>
-                    
-                    <h3>Technical Details</h3>
-                    <ul>
-                        <li>Implemented computer vision algorithms using OpenCV to process camera feed and detect line position</li>
-                        <li>Designed and tuned a PID controller for smooth, responsive steering control</li>
-                        <li>Programmed Arduino microcontroller to interface with motors, sensors, and camera</li>
-                        <li>Built custom chassis with 3D-printed parts for optimal sensor placement</li>
-                        <li>Achieved 95% accuracy in line tracking across various lighting conditions</li>
-                    </ul>
-                    
-                    <h3>Technologies Used</h3>
-                    <p>Arduino, C++, OpenCV, Python, PID Control, 3D Printing, Motor Control</p>
-                    
-                    <h3>Challenges & Solutions</h3>
-                    <p>The biggest challenge was handling varying lighting conditions. I solved this by implementing adaptive thresholding in the image processing pipeline and adding ambient light compensation.</p>
-                    
-                    <h3>Results</h3>
-                    <p>The robot successfully completed a complex track with sharp turns and intersections, demonstrating robust performance and real-time responsiveness. This project won first place in the university robotics competition.</p>
-                `
-            },
-            proj2: {
-                title: "Smart Energy Monitor",
-                description: `
-                    <h3>Overview</h3>
-                    <p>An IoT-based energy monitoring system that tracks real-time power consumption and sends data to a cloud dashboard for analysis and visualization. This project helps users understand their energy usage patterns and identify opportunities for savings.</p>
-                    
-                    <h3>System Architecture</h3>
-                    <ul>
-                        <li>ESP32 microcontroller with current sensors for real-time power measurement</li>
-                        <li>MQTT protocol for efficient data transmission to cloud server</li>
-                        <li>Cloud-based database for storing historical energy data</li>
-                        <li>Web dashboard built with React for data visualization and analytics</li>
-                        <li>Mobile-responsive design for monitoring on any device</li>
-                    </ul>
-                    
-                    <h3>Key Features</h3>
-                    <ul>
-                        <li>Real-time power consumption monitoring with 1-second update rate</li>
-                        <li>Historical data analysis with daily, weekly, and monthly views</li>
-                        <li>Customizable alerts for unusual consumption patterns</li>
-                        <li>Cost estimation based on local electricity rates</li>
-                        <li>Energy-saving recommendations based on usage patterns</li>
-                    </ul>
-                    
-                    <h3>Technologies Used</h3>
-                    <p>ESP32, C++, MQTT, Python, Flask, React, Chart.js, AWS IoT Core</p>
-                    
-                    <h3>Impact</h3>
-                    <p>Beta testing with 10 households showed an average 15% reduction in energy consumption after users became aware of their usage patterns through the dashboard.</p>
-                `
-            },
-            proj3: {
-                title: "Course Planner Web App",
-                description: `
-                    <h3>Overview</h3>
-                    <p>A responsive web application designed to help students efficiently plan their academic semesters. The app provides an intuitive interface for managing courses, tracking prerequisites, and visualizing degree progress.</p>
-                    
-                    <h3>Features</h3>
-                    <ul>
-                        <li>Drag-and-drop interface for organizing courses across semesters</li>
-                        <li>Automatic prerequisite checking to prevent scheduling conflicts</li>
-                        <li>Credit hour tracking and workload balancing recommendations</li>
-                        <li>Degree progress visualization with completion percentage</li>
-                        <li>Export functionality for sharing plans with advisors</li>
-                        <li>Dark mode support for comfortable viewing</li>
-                    </ul>
-                    
-                    <h3>Technical Implementation</h3>
-                    <ul>
-                        <li>Built with React for dynamic, component-based UI</li>
-                        <li>Styled with Tailwind CSS for responsive, modern design</li>
-                        <li>Local storage for persisting user data across sessions</li>
-                        <li>Custom algorithms for prerequisite validation and conflict detection</li>
-                        <li>Optimized performance for smooth drag-and-drop interactions</li>
-                    </ul>
-                    
-                    <h3>Technologies Used</h3>
-                    <p>React, JavaScript, Tailwind CSS, HTML5, Local Storage, React DnD</p>
-                    
-                    <h3>User Feedback</h3>
-                    <p>Over 200 students have used the app, with 90% reporting it significantly improved their course planning process. Many noted the prerequisite checking feature saved them from scheduling mistakes.</p>
-                `
-            }
-        };
+<div class="hud" aria-hidden="true">
+  <span>Target</span><b>Saturn</b>
+  <span>Range</span><b id="range">—</b>
+  <span>Phase</span><b id="phase">Approach</b>
+  <span>Axial tilt</span><b>26.7°</b>
+</div>
 
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
 
-        function openExperienceModal(expId) {
-            const modal = document.getElementById('experienceModal');
-            const header = document.getElementById('modalHeader');
-            const body = document.getElementById('modalBody');
-            const exp = experienceData[expId];
-            
-            header.innerHTML = `
-                <h2>${exp.title}</h2>
-                <p class="company">${exp.company}</p>
-                <p class="date">${exp.date}</p>
-            `;
-            body.innerHTML = exp.description;
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+document.getElementById('yr').textContent = new Date().getFullYear();
 
-        function closeExperienceModal() {
-            const modal = document.getElementById('experienceModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const canvas = document.getElementById('space');
 
-        function openBlogModal(blogId) {
-            const modal = document.getElementById('blogModal');
-            const header = document.getElementById('blogModalHeader');
-            const body = document.getElementById('blogModalBody');
-            const blog = blogData[blogId];
-            
-            header.innerHTML = `
-                <h2>${blog.title}</h2>
-                <p class="date">${blog.date}</p>
-            `;
-            body.innerHTML = blog.content;
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+// Section phase readout + nav highlight
+const phaseEl = document.getElementById('phase');
+const navLinks = [...document.querySelectorAll('nav ul a')];
+const io = new IntersectionObserver(entries => {
+  for (const e of entries) {
+    if (!e.isIntersecting) continue;
+    phaseEl.textContent = e.target.dataset.phase;
+    navLinks.forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'));
+  }
+}, { rootMargin: '-45% 0px -45% 0px' });
+document.querySelectorAll('section[data-phase]').forEach(s => io.observe(s));
 
-        function closeBlogModal() {
-            const modal = document.getElementById('blogModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+} catch (err) {
+  canvas.remove();
+  throw err; // page stays fully readable without the scene
+}
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x000000, 1);
 
-        function openProjectModal(projId) {
-            const modal = document.getElementById('projectModal');
-            const header = document.getElementById('projectModalHeader');
-            const body = document.getElementById('projectModalBody');
-            const proj = projectData[projId];
-            
-            header.innerHTML = `
-                <h2>${proj.title}</h2>
-            `;
-            body.innerHTML = proj.description;
-            modal.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 2000);
 
-        function closeProjectModal() {
-            const modal = document.getElementById('projectModal');
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+// soft round sprite for every point
+const dot = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d');
+  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+  gr.addColorStop(0, 'rgba(255,255,255,1)');
+  gr.addColorStop(0.35, 'rgba(255,255,255,.7)');
+  gr.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c);
+})();
+const pointsMat = (size) => new THREE.PointsMaterial({
+  size, map: dot, vertexColors: true, transparent: true, depthWrite: false, sizeAttenuation: true
+});
 
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const expModal = document.getElementById('experienceModal');
-            const blogModal = document.getElementById('blogModal');
-            const projModal = document.getElementById('projectModal');
-            if (event.target === expModal) {
-                closeExperienceModal();
-            }
-            if (event.target === blogModal) {
-                closeBlogModal();
-            }
-            if (event.target === projModal) {
-                closeProjectModal();
-            }
-        }
+const R = 2;                 // planet radius in scene units
+const KM_PER_UNIT = 58232 / R; // Saturn equatorial radius
+let totalPoints = 0;
 
-        // Theme Toggle
-        const themeToggle = document.getElementById('themeToggle');
-        const html = document.documentElement;
-        
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        html.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
+const system = new THREE.Group();
+const tilt = new THREE.Group();
+tilt.rotation.z = THREE.MathUtils.degToRad(26.7);
+tilt.rotation.x = 0.18;
+system.add(tilt);
+scene.add(system);
 
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            html.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-            updateThemeIcon(newTheme);
-        });
+// --- planet: banded point cloud, scanned-LiDAR look ---
+const planet = new THREE.Group();
+{
+  const N = 11000, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < N; i++) {
+    const y = 1 - (i / (N - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const th = golden * i;
+    const lat = Math.asin(y);
+    pos.set([Math.cos(th) * r * R, y * R * 0.9, Math.sin(th) * r * R], i * 3); // 10% oblate
+    const band = 0.5 + 0.5 * Math.sin(lat * 13 + Math.sin(lat * 4.2) * 1.6);
+    const b = 0.32 + 0.6 * band * (0.75 + 0.25 * Math.cos(lat));
+    col.set([b, b, b], i * 3);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  planet.add(new THREE.Points(g, pointsMat(0.05)));
+  totalPoints += N;
+  // black core hides the far hemisphere and the rings behind the planet
+  const core = new THREE.Mesh(new THREE.SphereGeometry(R * 0.985, 48, 32), new THREE.MeshBasicMaterial({ color: 0x000000 }));
+  core.scale.y = 0.9;
+  planet.add(core);
+}
+tilt.add(planet);
 
-        function updateThemeIcon(theme) {
-            themeToggle.textContent = theme === 'light' ? '🌙' : '☀️';
-        }
+// --- rings with real C / B / Cassini / A / Encke structure (in planet radii) ---
+const rings = new THREE.Group();
+{
+  const density = (rr) => {
+    if (rr < 1.24 || rr > 2.27) return 0;
+    if (rr < 1.53) return 0.28;                 // C ring
+    if (rr < 1.95) return 1.0;                  // B ring
+    if (rr < 2.03) return 0.03;                 // Cassini division
+    if (Math.abs(rr - 2.214) < 0.008) return 0; // Encke gap
+    return 0.62;                                // A ring
+  };
+  const N = 30000, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  let i = 0;
+  while (i < N) {
+    const rr = 1.24 + Math.random() * 1.03;
+    const d = density(rr) * (0.85 + 0.15 * Math.sin(rr * 90)); // fine ringlets
+    if (Math.random() > d) continue;
+    const a = Math.random() * Math.PI * 2;
+    pos.set([Math.cos(a) * rr * R, (Math.random() - 0.5) * 0.012, Math.sin(a) * rr * R], i * 3);
+    const b = 0.25 + 0.6 * d;
+    col.set([b, b, b], i * 3);
+    i++;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  rings.add(new THREE.Points(g, pointsMat(0.028)));
+  totalPoints += N;
+}
+tilt.add(rings);
 
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                    // Close mobile menu if open
-                    navMenu.classList.remove('active');
-                }
-            });
-        });
+// --- engineering overlay: spin axis + a probe on a dashed orbit ---
+const lineMat = new THREE.LineDashedMaterial({ color: 0x5a5a5a, dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: 0.8 });
+{
+  const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -R * 1.9, 0), new THREE.Vector3(0, R * 1.9, 0)]), lineMat);
+  axis.computeLineDistances();
+  tilt.add(axis);
+}
+const orbitR = R * 3.6;
+const orbit = new THREE.Group();
+orbit.rotation.x = 0.42; orbit.rotation.z = -0.15;
+{
+  const pts = [];
+  for (let k = 0; k <= 180; k++) { const a = k / 180 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * orbitR, 0, Math.sin(a) * orbitR * 0.92)); }
+  const loop = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat);
+  loop.computeLineDistances();
+  orbit.add(loop);
+}
+const probe = new THREE.Mesh(new THREE.OctahedronGeometry(0.07), new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }));
+orbit.add(probe);
+system.add(orbit);
 
-        // Mobile Menu Toggle
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const navMenu = document.getElementById('navMenu');
+// --- starfield ---
+{
+  const N = 2600, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
+  for (let i = 0; i < N; i++) {
+    const v = new THREE.Vector3().randomDirection().multiplyScalar(250 + Math.random() * 350);
+    pos.set([v.x, v.y, v.z], i * 3);
+    const b = 0.25 + Math.random() ** 3 * 0.75;
+    col.set([b, b, b], i * 3);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  const m = new THREE.PointsMaterial({ size: 1.6, map: dot, vertexColors: true, transparent: true, depthWrite: false, sizeAttenuation: false });
+  scene.add(new THREE.Points(g, m));
+  totalPoints += N;
+}
+document.getElementById('pts').textContent = totalPoints.toLocaleString() + ' points';
 
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-        });
+// --- scroll-driven camera path: approach, cross the ring plane, close pass, pull away ---
+const path = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, 2.2, 17),
+  new THREE.Vector3(-7.5, 3.2, 11),
+  new THREE.Vector3(-10.5, 0.15, 4.5),
+  new THREE.Vector3(-5.5, -1.2, -5.5),
+  new THREE.Vector3(5, -3.8, 13),
+]);
+const lookTarget = new THREE.Vector3();
+const rangeEl = document.getElementById('range');
+let scrollT = 0, smoothT = 0, mx = 0, my = 0, smx = 0, smy = 0;
 
-        // Contact Form
-        const contactForm = document.getElementById('contactForm');
-        const formSuccess = document.getElementById('formSuccess');
+function onScroll() {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  scrollT = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+}
+function onResize() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  // shift the projection so Saturn sits right of the text column on desktop, whatever the camera does
+  if (w > 900) camera.setViewOffset(w, h, -w * 0.24, 0, w, h); else camera.clearViewOffset();
+  onScroll();
+  if (reduce) frame(0);
+}
+addEventListener('scroll', onScroll, { passive: true });
+addEventListener('resize', onResize);
+addEventListener('pointermove', e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
 
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Show success message
-            formSuccess.style.display = 'block';
-            
-            // Reset form
-            contactForm.reset();
-            
-            // Hide success message after 5 seconds
-            setTimeout(() => {
-                formSuccess.style.display = 'none';
-            }, 5000);
-        });
+let last = performance.now(), probeA = 0;
+function frame(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now;
+  smoothT += (scrollT - smoothT) * (reduce ? 1 : 0.06);
+  smx += (mx - smx) * 0.05; smy += (my - smy) * 0.05;
 
-        // Update year in footer
-        document.getElementById('year').textContent = new Date().getFullYear();
+  if (!reduce) {
+    planet.rotation.y += dt * 0.12;
+    rings.rotation.y += dt * 0.03;
+    probeA += dt * 0.35;
+  }
+  probe.position.set(Math.cos(probeA) * orbitR, 0, Math.sin(probeA) * orbitR * 0.92);
+  probe.rotation.y = probeA * 2;
 
-        // Scroll animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
+  const p = path.getPoint(reduce ? 0 : smoothT);
+  camera.position.set(p.x + system.position.x + smx * 1.4, p.y + system.position.y - smy * 1.0, p.z);
+  lookTarget.copy(system.position);
+  camera.lookAt(lookTarget);
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
+  rangeEl.textContent = Math.round(camera.position.distanceTo(system.position) * KM_PER_UNIT).toLocaleString() + ' km';
+  renderer.render(scene, camera);
+}
 
-        // Observe all cards
-        document.querySelectorAll('.experience-card, .project-card, .blog-card, .skill-item').forEach(card => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(card);
-        });
-    </script>
+onResize();
+if (!reduce) {
+  renderer.setAnimationLoop(frame);
+  document.addEventListener('visibilitychange', () => renderer.setAnimationLoop(document.hidden ? null : frame));
+}
+</script>
 </body>
 </html>
