@@ -1,0 +1,86 @@
+/* Shared styles for blog.html and every post in /blog. Tokens match index.html. */
+:root {
+  --void: #000000;
+  --white: #ffffff;
+  --text: #d4d4d4;
+  --muted: #8f8f8f;
+  --rule: #2a2a2a;
+  --display: "Archivo", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --col: min(40rem, 100%);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--text);
+  font: 400 1.0625rem/1.7 var(--body);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--white); text-underline-offset: 0.22em; text-decoration-thickness: 1px; text-decoration-color: var(--muted); }
+a:hover { text-decoration-color: var(--white); }
+:focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
+img { display: block; max-width: 100%; }
+
+/* ---------- nav ---------- */
+nav {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 1.25rem clamp(1rem, 4vw, 3rem);
+  font-size: 0.9375rem;
+}
+nav .mark { font: 700 1.05rem/1 var(--display); font-stretch: 125%; color: var(--white); text-decoration: none; letter-spacing: -0.01em; }
+nav ul { list-style: none; display: flex; gap: 1.75rem; margin: 0; padding: 0; }
+nav ul a { color: var(--muted); text-decoration: none; }
+nav ul a:hover, nav ul a[aria-current="page"] { color: var(--white); }
+
+main { padding: 0 clamp(1rem, 4vw, 3rem); }
+.col { max-width: var(--col); }
+
+/* ---------- headings ---------- */
+h1 {
+  margin: 4rem 0 1rem;
+  font: 800 clamp(2.75rem, 8vw, 5.5rem)/0.9 var(--display); font-stretch: 125%;
+  letter-spacing: -0.035em; color: var(--white);
+}
+.lede { color: var(--muted); margin: 0 0 3rem; max-width: 32rem; }
+h2 { margin: 2.5rem 0 0.75rem; font: 700 1.5rem/1.2 var(--display); font-stretch: 112%; color: var(--white); }
+h3 { margin: 2rem 0 0.5rem; font: 600 1.125rem/1.35 var(--body); color: var(--white); }
+p { margin: 0 0 1.1rem; }
+
+/* ---------- filters + post list ---------- */
+.filters { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 1.5rem; padding: 0; list-style: none; }
+.filters button {
+  font: 400 0.8125rem/1 var(--mono); color: var(--muted);
+  background: none; border: 1px solid var(--rule); padding: 0.5rem 0.75rem; cursor: pointer;
+}
+.filters button:hover { color: var(--white); }
+.filters button[aria-pressed="true"] { color: var(--void); background: var(--white); border-color: var(--white); }
+
+.posts { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.posts li { border-bottom: 1px solid var(--rule); }
+.posts a { display: grid; grid-template-columns: 7rem 1fr; gap: 1.25rem; padding: 1.5rem 0; text-decoration: none; }
+.posts a:hover h2 { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+.posts .meta { font: 400 0.8125rem/1.6 var(--mono); color: var(--muted); }
+.posts h2 { margin: 0 0 0.35rem; font: 600 1.125rem/1.35 var(--body); }
+.posts p { margin: 0; color: var(--text); }
+.empty { color: var(--muted); padding: 1.5rem 0; }
+
+/* ---------- single post ---------- */
+.post-meta { font: 400 0.875rem/1.6 var(--mono); color: var(--muted); margin: 0 0 3rem; }
+.post h1 { font-size: clamp(2.25rem, 6vw, 3.75rem); line-height: 0.95; }
+.post blockquote { margin: 1.75rem 0; padding: 0 0 0 1.25rem; border-left: 2px solid var(--white); color: var(--white); font-style: italic; }
+.post ul, .post ol { padding-left: 1.2rem; }
+.post li::marker { color: var(--muted); }
+.post code { font: 400 0.9em var(--mono); color: var(--white); }
+.post pre { overflow-x: auto; padding: 1rem; border: 1px solid var(--rule); font: 400 0.875rem/1.55 var(--mono); }
+.post hr { border: 0; border-top: 1px solid var(--rule); margin: 2.5rem 0; }
+.back { display: inline-block; margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+
+footer { padding: 4rem clamp(1rem, 4vw, 3rem) 2.5rem; color: var(--muted); font-size: 0.875rem; }
+
+@media (max-width: 520px) {
+  body { font-size: 1rem; }
+  nav ul { gap: 1.1rem; }
+  .posts a { grid-template-columns: 1fr; gap: 0.35rem; }
+}

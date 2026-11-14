@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@112..125,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 <style>
   :root {
     --void: #000000;
@@ -39,14 +40,6 @@
   :focus-visible { outline: 2px solid var(--white); outline-offset: 4px; }
   img { display: block; max-width: 100%; }
 
-  /* 3D scene sits behind everything */
-  #space { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
-  /* gradient keeps the text column readable over the planet */
-  .veil {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: linear-gradient(90deg, rgba(0,0,0,.92) 0%, rgba(0,0,0,.72) 38%, rgba(0,0,0,0) 62%);
-  }
-
   /* ---------- nav ---------- */
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 5;
@@ -60,7 +53,7 @@
   nav ul a { color: var(--muted); text-decoration: none; }
   nav ul a:hover, nav ul a[aria-current="true"] { color: var(--white); }
 
-  main { position: relative; z-index: 2; padding: 0 clamp(1rem, 4vw, 3rem); }
+  main { padding: 0 clamp(1rem, 4vw, 3rem); }
   section { max-width: var(--col); padding: 7rem 0 2rem; }
 
   /* ---------- hero ---------- */
@@ -87,22 +80,80 @@
   h3 { margin: 0; font: 600 1.125rem/1.35 var(--body); color: var(--white); }
   p { margin: 0 0 1rem; }
 
-  /* ---------- experience ---------- */
-  .roles { list-style: none; margin: 0; padding: 0; }
-  .role { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.25rem; padding: 1.5rem 0; border-top: 1px solid var(--rule); }
-  .role:last-child { border-bottom: 1px solid var(--rule); }
-  .role img { width: 7.5rem; aspect-ratio: 4/3; object-fit: cover; filter: grayscale(1) contrast(1.1); border: 1px solid var(--rule); }
-  .role .thumb-blank { width: 7.5rem; aspect-ratio: 4/3; border: 1px dashed var(--rule); display: grid; place-items: center; color: var(--muted); font: 400 0.75rem var(--mono); }
-  .role .where { color: var(--muted); font-size: 0.9375rem; margin: 0.15rem 0 0.6rem; }
-  .role p:last-child { margin: 0; }
+  /* ---------- section meta strip ---------- */
+  .sec-meta { display: flex; justify-content: space-between; gap: 1rem; margin: -1.25rem 0 1.75rem; font: 400 .6875rem/1.5 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
 
-  /* ---------- projects ---------- */
-  .project { padding: 1.75rem 0; border-top: 1px solid var(--rule); }
-  .project:last-of-type { border-bottom: 1px solid var(--rule); }
-  .project .status { color: var(--muted); font-size: 0.9375rem; margin: 0.15rem 0 0.75rem; }
-  .project ul { margin: 0.75rem 0 0; padding-left: 1.1rem; }
-  .project li { margin-bottom: 0.35rem; }
-  .project li::marker { color: var(--muted); }
+  /* ---------- experience: mission log ---------- */
+  .roles { position: relative; list-style: none; margin: 0; padding: 0 0 0 2.25rem; }
+  .roles::before { content: ""; position: absolute; left: .5rem; top: 0; bottom: 0; width: 1px; background: var(--rule); }
+  .track-fill { position: absolute; left: .5rem; top: 0; width: 1px; height: var(--fill, 0); background: var(--white); box-shadow: 0 0 8px rgba(255,255,255,.45); pointer-events: none; }
+  .track-fill::after { content: ""; position: absolute; left: -3px; bottom: -3px; width: 7px; height: 7px; border-radius: 50%; background: var(--white); box-shadow: 0 0 12px 3px rgba(255,255,255,.55); }
+  .role { position: relative; display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.25rem; padding: 1.75rem 0; border-top: 1px solid var(--rule); transition: opacity .7s ease-out, transform .7s cubic-bezier(.2,.7,.2,1); }
+  .js .role:not(.is-in) { opacity: 0; transform: translateY(18px); }
+  .role:last-child { border-bottom: 1px solid var(--rule); }
+  .role::before { content: ""; position: absolute; left: calc(-2.25rem + .5rem - 4.5px); top: 2.05rem; width: 9px; height: 9px; background: var(--void); border: 1px solid #555; transform: rotate(45deg); transition: background .3s, border-color .3s, box-shadow .3s; }
+  .role[data-status="incoming"]::before { border-style: dashed; }
+  .role.is-lit::before { background: var(--white); border-color: var(--white); box-shadow: 0 0 10px rgba(255,255,255,.6); }
+  .role.is-lit[data-status="incoming"]::before { background: var(--void); }
+  .thumb { position: relative; margin: 0; width: 7.5rem; aspect-ratio: 4/3; align-self: start; overflow: hidden; border: 1px solid var(--rule); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1) brightness(.85); transition: transform .8s cubic-bezier(.2,.7,.2,1), filter .6s; }
+  .thumb.logo { border-color: transparent; }
+  .thumb.logo img { object-fit: contain; clip-path: circle(closest-side); }
+  .role:hover .thumb img { transform: scale(1.07); filter: grayscale(1) contrast(1.3) brightness(1); }
+  .thumb::before { content: ""; position: absolute; inset: 3px; z-index: 2; pointer-events: none; opacity: .85;
+    background:
+      linear-gradient(#fff,#fff) left top / 9px 1px no-repeat, linear-gradient(#fff,#fff) left top / 1px 9px no-repeat,
+      linear-gradient(#fff,#fff) right top / 9px 1px no-repeat, linear-gradient(#fff,#fff) right top / 1px 9px no-repeat,
+      linear-gradient(#fff,#fff) left bottom / 9px 1px no-repeat, linear-gradient(#fff,#fff) left bottom / 1px 9px no-repeat,
+      linear-gradient(#fff,#fff) right bottom / 9px 1px no-repeat, linear-gradient(#fff,#fff) right bottom / 1px 9px no-repeat; }
+  .thumb::after { content: ""; position: absolute; left: 0; right: 0; top: -40%; height: 40%; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.12) 92%, rgba(255,255,255,.85) 100%); }
+  .role.is-in .thumb::after { animation: scan 1.5s .25s cubic-bezier(.45,0,.3,1) both; }
+  .role:hover .thumb::after { animation: scan 1.8s cubic-bezier(.45,0,.3,1) infinite; }
+  @keyframes scan { from { top: -40%; } to { top: 105%; } }
+  .thumb figcaption { position: absolute; right: 6px; bottom: 5px; z-index: 2; font: 500 .5625rem/1 var(--mono); letter-spacing: .06em; color: var(--white); background: rgba(0,0,0,.7); padding: .15rem .25rem; }
+  .telemetry { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 0 0 .5rem; font: 400 .6875rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .telemetry .st { display: inline-flex; align-items: center; gap: .5rem; color: var(--white); }
+  .telemetry .st::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--white); animation: pulse 2.2s ease-out infinite; }
+  .role[data-status="incoming"] .st::before { background: none; border: 1px solid var(--white); animation: blink 1.4s steps(2, jump-none) infinite; }
+  .telemetry .met { color: var(--text); font-variant-numeric: tabular-nums; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,.55); } 70%, 100% { box-shadow: 0 0 0 7px rgba(255,255,255,0); } }
+  @keyframes blink { 50% { opacity: .15; } }
+  .role .where { color: var(--muted); font-size: 0.9375rem; margin: 0.15rem 0 0.6rem; }
+  .role p { margin: 0; }
+  .role-mods { display: flex; flex-wrap: wrap; gap: .35rem; margin: .9rem 0 0; padding: 0; list-style: none; }
+  .role-mods button { font: 400 .6875rem/1 var(--mono); color: var(--muted); background: none; border: 1px solid var(--rule); padding: .3rem .45rem; cursor: pointer; transition: color .2s, border-color .2s; }
+  .role-mods button:hover { color: var(--white); border-color: var(--white); }
+
+  /* ---------- onboard systems: system bus ---------- */
+  .bus { position: relative; background: #050505; border: 1px solid var(--rule); padding: 3rem 1rem 0; }
+  .bus-head { position: absolute; top: .9rem; left: .9rem; right: .9rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin: 0; font: 400 .625rem/1.5 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .bus-head .stage-tag { margin: 0 !important; }
+  .bus-head [data-boot] { font-variant-numeric: tabular-nums; }
+  .bus.is-booted .bus-head [data-boot] { color: var(--white); }
+  .wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .wire { fill: none; stroke: #fff; stroke-width: 1; }
+  .wire.faint { stroke-opacity: .13; }
+  .wire.hot { stroke-opacity: .55; }
+  .pkt { fill: #fff; }
+  .layer { position: relative; z-index: 1; display: grid; grid-template-columns: 7.25rem 1fr; gap: 1rem; padding: .9rem 0; border-top: 1px dashed #1e1e1e; }
+  .layer:first-of-type { border-top: 0; }
+  .layer h3 { display: flex; flex-direction: column; gap: .25rem; padding-top: .35rem; font: 500 .6875rem/1.2 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .layer-st { color: #444; transition: color .3s; }
+  .layer-st.ok { color: var(--white); }
+  .mods { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+  .mod { position: relative; font: 500 .75rem/1 var(--mono); color: var(--text); background: #000; border: 1px solid #333; padding: .5rem .6rem; cursor: pointer; transition: color .2s, border-color .2s, background .2s, opacity .35s; }
+  .js .bus .mod:not(.on) { opacity: .1; }
+  .mod:hover, .mod:focus-visible, .mod.is-sel { background: var(--white); color: #000; border-color: var(--white); }
+  .mod.is-linked { color: var(--white); border-color: var(--white); }
+  .bus.has-sel .mod.on:not(.is-sel):not(.is-linked) { opacity: .25; }
+  .mod.ping { animation: ping .6s ease-out; }
+  @keyframes ping { from { box-shadow: 0 0 0 0 rgba(255,255,255,.7); border-color: #fff; } to { box-shadow: 0 0 0 6px rgba(255,255,255,0); } }
+  .bus-readout { position: relative; z-index: 1; margin: 0 -1rem; padding: .8rem 1rem; min-height: 2.9rem; border-top: 1px solid var(--rule); font: 400 .75rem/1.5 var(--mono); color: var(--muted); }
+  .bus-readout b { color: var(--white); font-weight: 500; }
+  .edu { margin-top: 1.5rem; }
+
+  /* ---------- research notes ---------- */
   .stack { margin-top: 0.9rem; color: var(--muted); font: 400 0.875rem/1.5 var(--mono); }
 
   /* ---------- spec sheet ---------- */
@@ -111,370 +162,543 @@
   .spec dt { color: var(--muted); }
   .spec dd { color: var(--white); }
 
-  /* ---------- contact ---------- */
-  .contact { padding-bottom: 6rem; }
-  .contact .big {
-    display: inline-block; margin: 0.5rem 0 2rem;
-    font: 700 clamp(1.35rem, 3.6vw, 2.25rem)/1.15 var(--display); font-stretch: 112%;
-    word-break: break-word;
+  /* ---------- research demos ---------- */
+  .research .intro { color: var(--muted); margin-top: -1rem; }
+  .stage { position: relative; aspect-ratio: 1 / .8; margin: 1.75rem 0 1.5rem; perspective: 1800px; }
+  .stage-inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .95s cubic-bezier(.66, 0, .28, 1); }
+  .stage.is-flipped .stage-inner { transform: rotateY(180deg); }
+  .stage-face {
+    position: absolute; inset: 0; overflow: hidden;
+    background: #050505; border: 1px solid var(--rule);
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    touch-action: pan-y; cursor: grab; user-select: none;
   }
-  footer { position: relative; z-index: 2; padding: 2rem clamp(1rem, 4vw, 3rem) 2.5rem; color: var(--muted); font-size: 0.875rem; }
+  .stage-face.is-grabbing { cursor: grabbing; }
+  .stage-back { transform: rotateY(180deg); }
+  .stage-face canvas { display: block; width: 100%; height: 100%; }
+  .stage-labels { position: absolute; inset: 0; pointer-events: none; }
+  .lbl {
+    position: absolute; left: 0; top: 0; margin-top: -4px;
+    font: 500 .625rem/1 var(--mono); letter-spacing: .03em; white-space: nowrap;
+    color: var(--white); background: rgba(0,0,0,.75); border: 1px solid #3a3a3a; padding: .28rem .4rem;
+  }
+  .lbl.new { animation: lbl-in .5s ease-out; }
+  .lbl.is-target { background: var(--white); color: #000; border-color: var(--white); }
+  .lbl.zone { background: none; border: 0; color: #6a6a6a; text-transform: uppercase; letter-spacing: .08em; margin-top: 0; }
+  @keyframes lbl-in { from { opacity: 0; } }
+  .stage-meta { position: absolute; top: .9rem; left: .9rem; right: 7rem; pointer-events: none; font: 400 .6875rem/1.5 var(--mono); }
+  .stage-meta p { margin: 0; }
+  .stage-tag { display: inline-block; margin-bottom: .45rem !important; padding: .2rem .5rem; border: 1px solid var(--rule); color: var(--white); background: rgba(0,0,0,.6); text-transform: uppercase; letter-spacing: .08em; font-size: .625rem; }
+  .stage-status { color: var(--white); }
+  .stage-sub { color: var(--muted); }
+  .stage-prompt {
+    position: absolute; left: 50%; bottom: 3.6rem; transform: translateX(-50%); margin: 0;
+    font: 500 .8125rem/1 var(--mono); color: var(--white); white-space: nowrap;
+    background: rgba(0,0,0,.8); border: 1px solid var(--white); padding: .55rem .8rem;
+  }
+  .stage-legend { position: absolute; left: .9rem; bottom: .9rem; margin: 0; padding: 0; list-style: none; pointer-events: none; font: 400 .625rem/1.7 var(--mono); color: var(--muted); }
+  .sw { display: inline-block; width: .7rem; height: 2px; margin-right: .45rem; vertical-align: middle; background: var(--white); }
+  .sw.drone { background: #8fb4ff; }
+  .sw.dash { background: repeating-linear-gradient(90deg, #8f8f8f 0 3px, transparent 3px 5px); }
+  .sw.faint { background: #5a5a5a; }
+  .stage-hint { position: absolute; top: .9rem; right: .9rem; margin: 0; pointer-events: none; font: 400 .625rem/1.5 var(--mono); color: #6a6a6a; text-transform: uppercase; letter-spacing: .08em; transition: opacity .4s; }
+  .stage-face.is-touched .stage-hint { opacity: 0; }
+  .stage-fallback { display: none; position: absolute; inset: 0; place-items: center; margin: 0; font: 400 .75rem var(--mono); color: var(--muted); text-transform: uppercase; }
+  .stage-face.no-webgl .stage-fallback { display: grid; }
+  .stage-flip {
+    position: absolute; right: .9rem; bottom: .9rem; z-index: 3;
+    display: inline-flex; align-items: center; gap: .45rem; padding: .5rem .8rem;
+    font: 500 .6875rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+    color: var(--white); background: rgba(0,0,0,.8); border: 1px solid var(--rule); cursor: pointer;
+  }
+  .stage-flip:hover { border-color: var(--white); }
+  .stage-flip svg { transition: transform .6s; }
+  .stage-flip:hover svg { transform: rotate(180deg); }
+  .stage-flip::after { content: ""; position: absolute; left: .8rem; right: .8rem; bottom: 3px; height: 1px; background: var(--white); opacity: .5; transform: scaleX(var(--flip-progress, 0)); transform-origin: left; }
+  .stage.is-held .stage-flip::after { opacity: 0; }
+  .sim-note { padding-top: .25rem; }
+  .sim-note h3 { margin-bottom: .6rem; }
+  @media (prefers-reduced-motion: reduce) { .stage-inner { transition: none; } }
 
-  /* ---------- live telemetry readout ---------- */
-  .hud {
-    position: fixed; right: clamp(1rem, 4vw, 3rem); bottom: 1.5rem; z-index: 3;
-    font: 400 0.75rem/1.7 var(--mono); color: var(--muted);
-    display: grid; grid-template-columns: auto auto; gap: 0 1.25rem;
-    padding-top: 0.6rem; border-top: 1px solid var(--rule);
-    pointer-events: none;
-  }
-  .hud b { font-weight: 500; color: var(--white); text-align: right; font-variant-numeric: tabular-nums; }
+  /* ---------- off hours ---------- */
+  .interests { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; border-top: 1px solid var(--rule); }
+  .interest { padding: 1.5rem 0; }
+  .interest h3 { margin-bottom: 0.6rem; }
+  .now { display: grid; grid-template-columns: auto 1fr; gap: 0.3rem 1rem; margin: 1rem 0 0; font: 400 0.875rem/1.5 var(--mono); }
+  .now dt { color: var(--muted); }
+  .now dd { margin: 0; color: var(--white); }
+  .now dd.hookem { color: #bf5700; }
+  .more { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
+
+  footer { padding: 2rem clamp(1rem, 4vw, 3rem) 2.5rem; color: var(--muted); font-size: 0.875rem; }
 
   @media (max-width: 900px) {
-    .veil { background: rgba(0,0,0,.62); }
     nav ul { gap: 1.1rem; }
     nav ul li.opt { display: none; }
-    .hud { display: none; }
   }
   @media (max-width: 520px) {
     body { font-size: 1rem; }
     nav ul { display: none; }
     .role { grid-template-columns: 1fr; }
-    .role img, .role .thumb-blank { width: 100%; aspect-ratio: 16/7; }
+    .thumb { width: 100%; aspect-ratio: 16/7; }
+    .layer { grid-template-columns: 1fr; gap: .6rem; }
+    .layer h3 { flex-direction: row; justify-content: space-between; padding-top: 0; }
     .spec { grid-template-columns: 1fr; }
+    .interests { grid-template-columns: 1fr; }
+    .stage { aspect-ratio: 1 / 1.05; }
+    .stage-legend, .stage-sub { display: none; }
+    .stage-prompt { bottom: 3.4rem; font-size: .75rem; }
+    .interest + .interest { border-top: 1px solid var(--rule); }
     .spec dt { border-bottom: 0; padding-bottom: 0; }
   }
 </style>
 </head>
 <body>
-<canvas id="space" aria-hidden="true"></canvas>
-<div class="veil"></div>
-
 <nav aria-label="Primary">
   <a class="mark" href="#top">AA</a>
   <ul>
+    <li><a href="#research">Research</a></li>
     <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
     <li class="opt"><a href="#systems">Systems</a></li>
-    <li><a href="#contact">Contact</a></li>
+    <li class="opt"><a href="#offhours">Off hours</a></li>
+    <li><a href="blog.html">Blog</a></li>
   </ul>
 </nav>
 
 <main id="top">
-  <section class="hero" data-phase="Approach">
+  <section class="hero">
     <h1><span>Abdullah</span><span class="outline">Ahmed</span></h1>
-    <p class="lede">Systems engineering and Robotics student at UT Dallas. I build robots that keep working when parts of them don't.</p>
+    <p class="lede">Systems engineering and Robotics student at UT Dallas</p>
     <ul class="links">
       <li><a href="https://drive.google.com/file/d/1jvkq7n_vZGPys0mkO-rqCesTGeyzKJkA/preview" target="_blank" rel="noopener">Résumé</a></li>
       <li><a href="https://github.com/abdulahmd" target="_blank" rel="noopener">GitHub</a></li>
       <li><a href="https://www.linkedin.com/in/abdulahmd" target="_blank" rel="noopener">LinkedIn</a></li>
       <li><a href="mailto:abdullah.ahmed2@utdallas.edu">Email</a></li>
+      <li><a href="blog.html">Blog</a></li>
     </ul>
   </section>
 
-  <section id="experience" data-phase="Ring plane crossing">
-    <h2>Experience</h2>
-    <ul class="roles">
-      <li class="role">
-        <div class="thumb-blank">FuSa</div>
-        <div>
-          <h3>Functional Safety Systems Engineer (incoming)</h3>
-          <p class="where">Reynolds &amp; Moore</p>
-          <p>Functional safety for physical AI and autonomous systems: making machines fail in ways that are predictable and safe.</p>
-        </div>
-      </li>
-      <li class="role">
-        <img src="https://abdulahmd.github.io/cirens_cover.jpeg" alt="Clearpath Jackal rover in the CIrENs lab" loading="lazy">
-        <div>
-          <h3>Multi-Agent Robotics Researcher</h3>
-          <p class="where">CIrENs Lab, UT Dallas, 2025 to present</p>
-          <p>Heterogeneous Air-Ground Swarms for collaborative SLAM missions. Combining a heavy ground rover with 4 lightweight aerial drones. Exp. IROS 2027.</p>
-        </div>
-      </li>
-      <li class="role">
-        <img src="https://abdulahmd.github.io/lunabotics_cover.png" alt="Comet Lunabotics rover" loading="lazy">
-        <div>
-          <h3>Autonomous Systems Engineer (Mapping and Navigation)</h3>
-          <p class="where">AIAA Comet Lunabotics, 2025 to present</p>
-          <p>ROS 2 control and mapping subsystems for a lunar excavation rover, with micro-ROS on ESP32 over CAN.</p>
-        </div>
-      </li>
-      <li class="role">
-        <img src="https://abdulahmd.github.io/megadrone_cover.png" alt="Large research drone" loading="lazy">
-        <div>
-          <h3>Drone Software Systems Researcher</h3>
-          <p class="where">AIAA Aerospace Research Corps, 2025 to present</p>
-          <p>PX4 flight software for a large-format drone.</p>
-        </div>
-      </li>
-    </ul>
-  </section>
+  <section id="research" class="research">
+    <h2>Research</h2>
+    <p class="intro">Both systems I work on, re-enacted live in your browser. Simplified and sped up, but the logic is real.</p>
 
-  <section id="projects" data-phase="Cassini division">
-    <h2>Projects</h2>
+    <div class="stage" id="stage">
+      <div class="stage-inner">
+        <div class="stage-face" aria-label="H-SLAM simulation">
+          <canvas role="img" aria-label="A ground rover covers a floor along a Hilbert curve, launches three drones over areas it cannot drive, and a vision-language model labels objects in the merged map"></canvas>
+          <div class="stage-labels"></div>
+          <div class="stage-meta">
+            <p class="stage-tag">H-SLAM · CIReNS Lab</p>
+            <p class="stage-status" data-status aria-live="off"></p>
+            <p class="stage-sub" data-sub></p>
+          </div>
+          <p class="stage-prompt" hidden></p>
+          <ul class="stage-legend">
+            <li><i class="sw"></i>Jackal LiDAR + depth</li>
+            <li><i class="sw drone"></i>Crazyflie ORB-SLAM</li>
+            <li><i class="sw dash"></i>Hilbert coverage plan</li>
+          </ul>
+          <p class="stage-hint">Drag to orbit</p>
+          <p class="stage-fallback">This demo needs WebGL</p>
+        </div>
+        <div class="stage-face stage-back" aria-label="Lunabotics simulation" inert>
+          <canvas role="img" aria-label="A lunar excavation rover maps the arena, plans around craters and boulders, digs regolith and builds a berm"></canvas>
+          <div class="stage-labels"></div>
+          <div class="stage-meta">
+            <p class="stage-tag">Lunabotics · Comet Aerobotics</p>
+            <p class="stage-status" data-status aria-live="off"></p>
+            <p class="stage-sub" data-sub></p>
+          </div>
+          <ul class="stage-legend">
+            <li><i class="sw"></i>RTAB-Map terrain</li>
+            <li><i class="sw dash"></i>Nav2 costmap inflation</li>
+            <li><i class="sw faint"></i>RRT search tree</li>
+          </ul>
+          <p class="stage-hint">Drag to orbit</p>
+          <p class="stage-fallback">This demo needs WebGL</p>
+        </div>
+      </div>
+      <button class="stage-flip" id="stage-flip" type="button">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>
+        <span class="stage-flip-label">Lunabotics</span>
+      </button>
+    </div>
 
-    <article class="project">
-      <h3>Crazyflie deployment pod for the Clearpath Jackal</h3>
-      <p class="status">CIrENs Lab, in progress</p>
-      <p>A ground rover that carries and launches a small drone swarm. Servo-lidded pods on a parametric frame, driven by an ESP32 off the Jackal's power rail.</p>
-      <ul>
-        <li>Parametric OpenSCAD frame: 450 × 323 mm ring, 140 mm pods with optical-flow sensor openings</li>
-        <li>ESP32 with MG90S servos and transistor-switched status LEDs, buck-converted from the Jackal's 12 V rail</li>
-        <li>PTP time sync (linuxptp) between an Ouster LiDAR and the Jackal for aligned scans</li>
-      </ul>
-      <p class="stack">ESP32, OpenSCAD, KiCad, ROS 2, linuxptp, Ouster</p>
+    <article class="sim-note">
+      <h3>H-SLAM: heterogeneous air-ground SLAM</h3>
+      <p>A Clearpath Jackal with a LiDAR and a depth camera carries three Crazyflie 2.0 drones fitted with cameras. The rover covers the area along a space-filling curve, with move_base planning each leg using RRT. Wherever it can't drive, it launches a drone on a reconnaissance path to map that region from above. ORB-SLAM fuses both views into one map, and a VLM on the host computer labels the objects in it. Once mapping is done, you can prompt the team to go to any of them.</p>
+      <p class="stack">ROS, move_base, RRT, ORB-SLAM, Clearpath Jackal, Crazyflie 2.0, VLM</p>
+      <p><a href="https://github.com/cirens-utd/h-slam" target="_blank" rel="noopener">cirens-utd/h-slam</a></p>
+    </article>
+    <article class="sim-note" hidden>
+      <h3>Lunabotics: mapping and navigation</h3>
+      <p>I lead mapping and navigation for Comet Aerobotics in the NASA Lunabotics challenge. The rover builds its map with RTAB-Map and plans around craters and boulders with Nav2 and an RRT planner. Then it loops between the excavation zone and the construction zone, digging regolith and depositing it into a berm.</p>
+      <p class="stack">ROS 2, Nav2, RTAB-Map, RRT, micro-ROS, ESP32, CAN</p>
+      <p><a href="https://github.com/Comet-Aerobotics/CAN" target="_blank" rel="noopener">Comet-Aerobotics/CAN</a></p>
     </article>
   </section>
 
-  <section id="systems" data-phase="Close orbit">
+  <section id="experience">
+    <h2>Experience</h2>
+    <p class="sec-meta"><span>Mission log</span><span>3 entries · 2 active · 1 standby</span></p>
+    <!-- data-since drives the live T+ clock; set these to your real start dates (YYYY-MM-DD) -->
+    <ol class="roles">
+      <li class="role" data-status="incoming">
+        <figure class="thumb logo"><img src="reynolds_moore_logo.jpeg" alt="Reynolds &amp; Moore logo" loading="lazy"></figure>
+        <div>
+          <p class="telemetry"><span class="st">Standby</span><span class="met">Pre-launch</span></p>
+          <h3>Functional Safety Systems Engineer (incoming)</h3>
+          <p class="where">Reynolds &amp; Moore</p>
+          <p>Functional safety for physical AI and autonomous systems: making machines fail in ways that are predictable and safe.</p>
+          <ul class="role-mods"><li><button type="button" data-goto="Functional safety">Functional safety</button></li></ul>
+        </div>
+      </li>
+      <li class="role" data-status="active">
+        <figure class="thumb"><img src="cirens_cover.jpg" alt="Clearpath Jackal rover in the CIReNS lab" loading="lazy"><figcaption>CH-02</figcaption></figure>
+        <div>
+          <p class="telemetry"><span class="st">Active</span><span class="met" data-since="2025-01-01">T+</span></p>
+          <h3>Multi-Agent Robotics Researcher</h3>
+          <p class="where">CIReNS Lab, UT Dallas, 2025 to present</p>
+          <p>Heterogeneous Air-Ground Swarms for collaborative SLAM missions. Combining a heavy ground rover with 4 lightweight aerial drones. Exp. IROS 2027.</p>
+          <ul class="role-mods">
+            <li><button type="button" data-goto="SLAM">SLAM</button></li>
+            <li><button type="button" data-goto="OpenCV">OpenCV</button></li>
+            <li><button type="button" data-goto="C++">C++</button></li>
+          </ul>
+        </div>
+      </li>
+      <li class="role" data-status="active">
+        <figure class="thumb"><img src="lunabotics_cover.png" alt="Comet Lunabotics rover" loading="lazy"><figcaption>CH-03</figcaption></figure>
+        <div>
+          <p class="telemetry"><span class="st">Active</span><span class="met" data-since="2025-01-01">T+</span></p>
+          <h3>Autonomous Systems Engineer (Mapping and Navigation)</h3>
+          <p class="where">AIAA Comet Lunabotics, 2025 to present</p>
+          <p>ROS 2 mapping and navigation pipeline for a lunar excavation rover</p>
+          <ul class="role-mods">
+            <li><button type="button" data-goto="ROS 2">ROS 2</button></li>
+            <li><button type="button" data-goto="Nav2">Nav2</button></li>
+            <li><button type="button" data-goto="micro-ROS">micro-ROS</button></li>
+            <li><button type="button" data-goto="ESP32">ESP32</button></li>
+            <li><button type="button" data-goto="CAN">CAN</button></li>
+          </ul>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section id="systems">
     <h2>Onboard systems</h2>
-    <dl class="spec">
-      <dt>Languages</dt><dd>C++, Python, C, C#, Java, Bash, MATLAB</dd>
-      <dt>Robotics</dt><dd>ROS 2, Nav2, micro-ROS, SLAM, Gazebo, Isaac Sim, OpenCV, PX4</dd>
-      <dt>Hardware</dt><dd>ESP32, Jetson, Raspberry Pi, CAN, KiCad, Onshape, SolidWorks</dd>
-      <dt>Practice</dt><dd>Control systems, functional safety, Linux, Docker, Git</dd>
+    <div class="bus">
+      <svg class="wires" aria-hidden="true"></svg>
+      <p class="bus-head"><span class="stage-tag">System bus</span><span data-boot>Standby</span></p>
+      <div class="layer" data-layer="Autonomy">
+        <h3>Autonomy <span class="layer-st">[ -- ]</span></h3>
+        <ul class="mods">
+          <li><button class="mod" type="button" data-mod="SLAM">SLAM</button></li>
+          <li><button class="mod" type="button" data-mod="Nav2">Nav2</button></li>
+          <li><button class="mod" type="button" data-mod="OpenCV">OpenCV</button></li>
+          <li><button class="mod" type="button" data-mod="PX4">PX4</button></li>
+          <li><button class="mod" type="button" data-mod="Control systems">Control systems</button></li>
+          <li><button class="mod" type="button" data-mod="Functional safety">Functional safety</button></li>
+        </ul>
+      </div>
+      <div class="layer" data-layer="Middleware &amp; OS">
+        <h3>Middleware <span class="layer-st">[ -- ]</span></h3>
+        <ul class="mods">
+          <li><button class="mod" type="button" data-mod="ROS 2">ROS 2</button></li>
+          <li><button class="mod" type="button" data-mod="micro-ROS">micro-ROS</button></li>
+          <li><button class="mod" type="button" data-mod="Linux">Linux</button></li>
+          <li><button class="mod" type="button" data-mod="Docker">Docker</button></li>
+          <li><button class="mod" type="button" data-mod="Git">Git</button></li>
+        </ul>
+      </div>
+      <div class="layer" data-layer="Compute &amp; I/O">
+        <h3>Compute &amp; I/O <span class="layer-st">[ -- ]</span></h3>
+        <ul class="mods">
+          <li><button class="mod" type="button" data-mod="Jetson">Jetson</button></li>
+          <li><button class="mod" type="button" data-mod="Raspberry Pi">Raspberry Pi</button></li>
+          <li><button class="mod" type="button" data-mod="ESP32">ESP32</button></li>
+          <li><button class="mod" type="button" data-mod="CAN">CAN</button></li>
+        </ul>
+      </div>
+      <div class="layer" data-layer="Sim &amp; CAD">
+        <h3>Sim &amp; CAD <span class="layer-st">[ -- ]</span></h3>
+        <ul class="mods">
+          <li><button class="mod" type="button" data-mod="Gazebo">Gazebo</button></li>
+          <li><button class="mod" type="button" data-mod="Isaac Sim">Isaac Sim</button></li>
+          <li><button class="mod" type="button" data-mod="KiCad">KiCad</button></li>
+          <li><button class="mod" type="button" data-mod="Onshape">Onshape</button></li>
+          <li><button class="mod" type="button" data-mod="SolidWorks">SolidWorks</button></li>
+        </ul>
+      </div>
+      <div class="layer" data-layer="Languages">
+        <h3>Languages <span class="layer-st">[ -- ]</span></h3>
+        <ul class="mods">
+          <li><button class="mod" type="button" data-mod="C++">C++</button></li>
+          <li><button class="mod" type="button" data-mod="Python">Python</button></li>
+          <li><button class="mod" type="button" data-mod="C">C</button></li>
+          <li><button class="mod" type="button" data-mod="C#">C#</button></li>
+          <li><button class="mod" type="button" data-mod="Java">Java</button></li>
+          <li><button class="mod" type="button" data-mod="Bash">Bash</button></li>
+          <li><button class="mod" type="button" data-mod="MATLAB">MATLAB</button></li>
+        </ul>
+      </div>
+      <p class="bus-readout" aria-live="polite">Hover or tap a module to trace its links.</p>
+    </div>
+    <dl class="spec edu">
       <dt>Education</dt><dd>B.S. Systems Engineering, UT Dallas</dd>
     </dl>
   </section>
 
-  <section id="contact" class="contact" data-phase="Departure">
-    <h2>Open a channel</h2>
-    <p>Looking for robotics and embedded systems internships, especially in aerospace and industry. The fastest way to reach me is email.</p>
-    <a class="big" href="mailto:abdullah.ahmed2@utdallas.edu">abdullah.ahmed2@utdallas.edu</a>
-    <ul class="links">
-      <li><a href="https://www.linkedin.com/in/abdulahmd" target="_blank" rel="noopener">LinkedIn</a></li>
-      <li><a href="https://github.com/abdulahmd" target="_blank" rel="noopener">GitHub</a></li>
-      <li><a href="https://drive.google.com/file/d/1jvkq7n_vZGPys0mkO-rqCesTGeyzKJkA/preview" target="_blank" rel="noopener">Résumé</a></li>
-    </ul>
+  <section id="offhours">
+    <h2>Off hours</h2>
+    <p>Besides autonomy, I'm really into philosophy (in a non-larping kind of way) and my Saturdays belong to Texas football.</p>
+    <div class="interests">
+      <article class="interest">
+        <h3>Philosophy</h3>
+        <p>I'm love political and Islamic philosophy, with an interest in the timeless debate between al-Ghazali, Ibn Rushd, and Ibn Taymiyyah over reason, revelation, and how to approach philosophy. I have yet to meet another person who finds this interesting.</p>
+        <dl class="now">
+          <dt>Reading</dt><dd>Tahafat al Filasifa, Leviathan</dd>
+          <dt>Keeps coming back</dt><dd>al Ghazali, Ibn Rushd, Thomas Hobbes</dd>
+        </dl>
+      </article>
+      <article class="interest">
+        <h3>College football</h3>
+        <p>I'm a Longhorns fan, mostly because the NFL is rigged and the Cowboys suck. My Saturdays in the fall aren't really mine, and my mood on Sunday depends a lot more on a bunch of 20-year-olds than it should.</p>
+        <dl class="now">
+          <dt>Every October</dt><dd>Red River week, unbearable either way</dd>
+          <dt>Sign-off</dt><dd class="hookem">Hook 'em 🤘</dd>
+        </dl>
+      </article>
+    </div>
+    <p class="more"><a href="blog.html">Longer thoughts live on the blog →</a></p>
   </section>
 </main>
 
-<footer>© <span id="yr"></span> Abdullah Ahmed. Saturn here is <span id="pts">a few thousand</span> points, rendered live, roughly to scale.</footer>
-
-<div class="hud" aria-hidden="true">
-  <span>Target</span><b>Saturn</b>
-  <span>Range</span><b id="range">—</b>
-  <span>Phase</span><b id="phase">Approach</b>
-  <span>Axial tilt</span><b>26.7°</b>
-</div>
+<footer>© <span id="yr"></span> Abdullah Ahmed</footer>
 
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
 </script>
-<script type="module">
-import * as THREE from 'three';
-
+<script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const canvas = document.getElementById('space');
-
-// Section phase readout + nav highlight
-const phaseEl = document.getElementById('phase');
+// highlight the nav link for the section in view
 const navLinks = [...document.querySelectorAll('nav ul a')];
 const io = new IntersectionObserver(entries => {
   for (const e of entries) {
     if (!e.isIntersecting) continue;
-    phaseEl.textContent = e.target.dataset.phase;
     navLinks.forEach(a => a.setAttribute('aria-current', a.getAttribute('href') === '#' + e.target.id ? 'true' : 'false'));
   }
 }, { rootMargin: '-45% 0px -45% 0px' });
-document.querySelectorAll('section[data-phase]').forEach(s => io.observe(s));
+document.querySelectorAll('main section[id]').forEach(s => io.observe(s));
 
-let renderer;
-try {
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-} catch (err) {
-  canvas.remove();
-  throw err; // page stays fully readable without the scene
-}
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setClearColor(0x000000, 1);
+(() => {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  const ease = t => t < .5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 2000);
+  // ---------- experience: mission log ----------
+  const roles = document.querySelector('.roles');
+  const fill = document.createElement('span');
+  fill.className = 'track-fill'; fill.setAttribute('aria-hidden', 'true');
+  roles.prepend(fill);
+  const items = [...roles.querySelectorAll('.role')];
+  const rio = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('is-in'); rio.unobserve(e.target); }
+  }), { threshold: .2 });
+  items.forEach(r => rio.observe(r));
 
-// soft round sprite for every point
-const dot = (() => {
-  const c = document.createElement('canvas'); c.width = c.height = 64;
-  const g = c.getContext('2d');
-  const gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
-  gr.addColorStop(0, 'rgba(255,255,255,1)');
-  gr.addColorStop(0.35, 'rgba(255,255,255,.7)');
-  gr.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
-  return new THREE.CanvasTexture(c);
-})();
-const pointsMat = (size) => new THREE.PointsMaterial({
-  size, map: dot, vertexColors: true, transparent: true, depthWrite: false, sizeAttenuation: true
-});
-
-const R = 2;                 // planet radius in scene units
-const KM_PER_UNIT = 58232 / R; // Saturn equatorial radius
-let totalPoints = 0;
-
-const system = new THREE.Group();
-const tilt = new THREE.Group();
-tilt.rotation.z = THREE.MathUtils.degToRad(26.7);
-tilt.rotation.x = 0.18;
-system.add(tilt);
-scene.add(system);
-
-// --- planet: banded point cloud, scanned-LiDAR look ---
-const planet = new THREE.Group();
-{
-  const N = 11000, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  for (let i = 0; i < N; i++) {
-    const y = 1 - (i / (N - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const th = golden * i;
-    const lat = Math.asin(y);
-    pos.set([Math.cos(th) * r * R, y * R * 0.9, Math.sin(th) * r * R], i * 3); // 10% oblate
-    const band = 0.5 + 0.5 * Math.sin(lat * 13 + Math.sin(lat * 4.2) * 1.6);
-    const b = 0.32 + 0.6 * band * (0.75 + 0.25 * Math.cos(lat));
-    col.set([b, b, b], i * 3);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  planet.add(new THREE.Points(g, pointsMat(0.05)));
-  totalPoints += N;
-  // black core hides the far hemisphere and the rings behind the planet
-  const core = new THREE.Mesh(new THREE.SphereGeometry(R * 0.985, 48, 32), new THREE.MeshBasicMaterial({ color: 0x000000 }));
-  core.scale.y = 0.9;
-  planet.add(core);
-}
-tilt.add(planet);
-
-// --- rings with real C / B / Cassini / A / Encke structure (in planet radii) ---
-const rings = new THREE.Group();
-{
-  const density = (rr) => {
-    if (rr < 1.24 || rr > 2.27) return 0;
-    if (rr < 1.53) return 0.28;                 // C ring
-    if (rr < 1.95) return 1.0;                  // B ring
-    if (rr < 2.03) return 0.03;                 // Cassini division
-    if (Math.abs(rr - 2.214) < 0.008) return 0; // Encke gap
-    return 0.62;                                // A ring
+  let queued = false;
+  const track = () => {
+    queued = false;
+    const r = roles.getBoundingClientRect();
+    const f = clamp(innerHeight * .62 - r.top, 0, r.height);
+    fill.style.setProperty('--fill', f + 'px');
+    items.forEach(it => it.classList.toggle('is-lit', it.offsetTop + 36 <= f));
   };
-  const N = 30000, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-  let i = 0;
-  while (i < N) {
-    const rr = 1.24 + Math.random() * 1.03;
-    const d = density(rr) * (0.85 + 0.15 * Math.sin(rr * 90)); // fine ringlets
-    if (Math.random() > d) continue;
-    const a = Math.random() * Math.PI * 2;
-    pos.set([Math.cos(a) * rr * R, (Math.random() - 0.5) * 0.012, Math.sin(a) * rr * R], i * 3);
-    const b = 0.25 + 0.6 * d;
-    col.set([b, b, b], i * 3);
-    i++;
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(track); } }, { passive: true });
+  addEventListener('resize', track);
+  track();
+
+  const clocks = [...document.querySelectorAll('[data-since]')];
+  const pad = n => String(n).padStart(2, '0');
+  const tick = () => {
+    const now = Date.now();
+    for (const c of clocks) {
+      let s = Math.max(0, Math.floor((now - Date.parse(c.dataset.since)) / 1000));
+      const d = Math.floor(s / 86400); s %= 86400;
+      c.textContent = `T+ ${d}d ${pad(Math.floor(s / 3600))}:${pad(Math.floor(s % 3600 / 60))}:${pad(s % 60)}`;
+    }
+  };
+  tick(); setInterval(tick, 1000);
+
+  // ---------- onboard systems: system bus ----------
+  const bus = document.querySelector('.bus');
+  const svg = bus.querySelector('.wires');
+  const out = bus.querySelector('.bus-readout');
+  const bootEl = bus.querySelector('[data-boot]');
+  const NS = 'http://www.w3.org/2000/svg';
+  const mods = new Map([...bus.querySelectorAll('.mod')].map(b => [b.dataset.mod, b]));
+  const LINKS = {
+    'ROS 2': ['Nav2', 'micro-ROS', 'SLAM', 'Gazebo', 'Isaac Sim', 'C++', 'Python', 'Linux', 'Docker', 'Jetson'],
+    'micro-ROS': ['ESP32', 'C'],
+    'Nav2': ['SLAM', 'Control systems'],
+    'SLAM': ['OpenCV', 'Jetson', 'C++'],
+    'OpenCV': ['Python', 'C++'],
+    'PX4': ['C++', 'Control systems', 'Gazebo'],
+    'ESP32': ['C', 'CAN', 'KiCad'],
+    'CAN': ['Functional safety', 'C'],
+    'Jetson': ['Linux', 'Docker'],
+    'Raspberry Pi': ['Linux', 'Python'],
+    'Control systems': ['MATLAB', 'Functional safety'],
+    'Onshape': ['Isaac Sim', 'Gazebo'],
+    'SolidWorks': ['Isaac Sim', 'Gazebo'],
+    'Bash': ['Linux'],
+    'Git': ['Bash', 'Linux'],
+  };
+  const USED = {
+    'ROS 2': ['Lunabotics'], 'Nav2': ['Lunabotics'], 'micro-ROS': ['Lunabotics'],
+    'ESP32': ['Lunabotics'], 'CAN': ['Lunabotics'], 'SLAM': ['H-SLAM', 'Lunabotics'],
+    'Functional safety': ['Reynolds & Moore'],
+  };
+  const adj = new Map([...mods.keys()].map(k => [k, new Set()]));
+  const edges = [];
+  for (const [a, list] of Object.entries(LINKS)) for (const b of list) {
+    if (!mods.has(a) || !mods.has(b)) continue;
+    adj.get(a).add(b); adj.get(b).add(a); edges.push([a, b]);
   }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  rings.add(new THREE.Points(g, pointsMat(0.028)));
-  totalPoints += N;
-}
-tilt.add(rings);
 
-// --- engineering overlay: spin axis + a probe on a dashed orbit ---
-const lineMat = new THREE.LineDashedMaterial({ color: 0x5a5a5a, dashSize: 0.18, gapSize: 0.14, transparent: true, opacity: 0.8 });
-{
-  const axis = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, -R * 1.9, 0), new THREE.Vector3(0, R * 1.9, 0)]), lineMat);
-  axis.computeLineDistances();
-  tilt.add(axis);
-}
-const orbitR = R * 3.6;
-const orbit = new THREE.Group();
-orbit.rotation.x = 0.42; orbit.rotation.z = -0.15;
-{
-  const pts = [];
-  for (let k = 0; k <= 180; k++) { const a = k / 180 * Math.PI * 2; pts.push(new THREE.Vector3(Math.cos(a) * orbitR, 0, Math.sin(a) * orbitR * 0.92)); }
-  const loop = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat);
-  loop.computeLineDistances();
-  orbit.add(loop);
-}
-const probe = new THREE.Mesh(new THREE.OctahedronGeometry(0.07), new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: true }));
-orbit.add(probe);
-system.add(orbit);
+  const center = k => {
+    const br = bus.getBoundingClientRect(), r = mods.get(k).getBoundingClientRect();
+    return [r.left - br.left + r.width / 2, r.top - br.top + r.height / 2];
+  };
+  const pathD = (a, b) => {
+    const [x1, y1] = center(a), [x2, y2] = center(b);
+    if (Math.abs(y1 - y2) < 8) {
+      const lift = 20 + Math.abs(x2 - x1) * .15;
+      return `M${x1} ${y1}C${x1} ${y1 - lift} ${x2} ${y2 - lift} ${x2} ${y2}`;
+    }
+    const my = (y1 + y2) / 2;
+    return `M${x1} ${y1}C${x1} ${my} ${x2} ${my} ${x2} ${y2}`;
+  };
+  const mkPath = (a, b, cls) => {
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', pathD(a, b)); p.setAttribute('class', 'wire ' + cls);
+    svg.appendChild(p); return p;
+  };
+  const ping = k => { const el = mods.get(k); el.classList.remove('ping'); void el.offsetWidth; el.classList.add('ping'); };
 
-// --- starfield ---
-{
-  const N = 2600, pos = new Float32Array(N * 3), col = new Float32Array(N * 3);
-  for (let i = 0; i < N; i++) {
-    const v = new THREE.Vector3().randomDirection().multiplyScalar(250 + Math.random() * 350);
-    pos.set([v.x, v.y, v.z], i * 3);
-    const b = 0.25 + Math.random() ** 3 * 0.75;
-    col.set([b, b, b], i * 3);
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  const m = new THREE.PointsMaterial({ size: 1.6, map: dot, vertexColors: true, transparent: true, depthWrite: false, sizeAttenuation: false });
-  scene.add(new THREE.Points(g, m));
-  totalPoints += N;
-}
-document.getElementById('pts').textContent = totalPoints.toLocaleString() + ' points';
+  const packets = [];
+  const send = (path, to, dur, keep) => {
+    const dot = document.createElementNS(NS, 'circle');
+    dot.setAttribute('r', 2.2); dot.setAttribute('class', 'pkt');
+    svg.appendChild(dot);
+    packets.push({ path, len: path.getTotalLength(), dot, t: 0, dur, to, keep });
+  };
+  const clearAmbient = () => {
+    for (const p of packets) { p.dot.remove(); if (!p.keep) p.path.remove(); }
+    packets.length = 0;
+  };
 
-// --- scroll-driven camera path: approach, cross the ring plane, close pass, pull away ---
-const path = new THREE.CatmullRomCurve3([
-  new THREE.Vector3(0, 2.2, 17),
-  new THREE.Vector3(-7.5, 3.2, 11),
-  new THREE.Vector3(-10.5, 0.15, 4.5),
-  new THREE.Vector3(-5.5, -1.2, -5.5),
-  new THREE.Vector3(5, -3.8, 13),
-]);
-const lookTarget = new THREE.Vector3();
-const rangeEl = document.getElementById('range');
-let scrollT = 0, smoothT = 0, mx = 0, my = 0, smx = 0, smy = 0;
+  let cur = null, pinned = null, hot = [], booted = false, started = false, visible = false;
+  const show = k => {
+    cur = k;
+    hot.forEach(h => h.el.remove()); hot = [];
+    mods.forEach((el, key) => {
+      el.classList.toggle('is-sel', key === k);
+      el.classList.toggle('is-linked', !!k && adj.get(k).has(key));
+      el.setAttribute('aria-pressed', String(key === pinned));
+    });
+    bus.classList.toggle('has-sel', !!k);
+    if (!k) { out.textContent = 'Hover or tap a module to trace its links.'; return; }
+    for (const b of adj.get(k)) {
+      const el = mkPath(k, b, 'hot');
+      if (!reduce) {
+        const L = el.getTotalLength();
+        el.style.strokeDasharray = L; el.style.strokeDashoffset = L;
+        el.getBoundingClientRect();
+        el.style.transition = 'stroke-dashoffset .5s ease-out'; el.style.strokeDashoffset = 0;
+      }
+      hot.push({ el, to: b });
+    }
+    const n = adj.get(k).size, u = USED[k];
+    const layer = mods.get(k).closest('.layer').dataset.layer;
+    out.innerHTML = '';
+    const b = document.createElement('b'); b.textContent = k;
+    out.append(b, ` · ${layer} · ${n ? n + (n > 1 ? ' links' : ' link') : 'standalone'}${u ? ' · flown on ' + u.join(', ') : ''}`);
+  };
 
-function onScroll() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  scrollT = max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
-}
-function onResize() {
-  const w = innerWidth, h = innerHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  // shift the projection so Saturn sits right of the text column on desktop, whatever the camera does
-  if (w > 900) camera.setViewOffset(w, h, -w * 0.24, 0, w, h); else camera.clearViewOffset();
-  onScroll();
-  if (reduce) frame(0);
-}
-addEventListener('scroll', onScroll, { passive: true });
-addEventListener('resize', onResize);
-addEventListener('pointermove', e => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+  mods.forEach((el, k) => {
+    el.addEventListener('mouseenter', () => booted && show(k));
+    el.addEventListener('focus', () => booted && show(k));
+    el.addEventListener('mouseleave', () => booted && show(pinned));
+    el.addEventListener('blur', () => booted && show(pinned));
+    el.addEventListener('click', () => { pinned = pinned === k ? null : k; if (booted) show(pinned); });
+  });
+  addEventListener('resize', () => { clearAmbient(); if (booted) show(cur); });
 
-let last = performance.now(), probeA = 0;
-function frame(now) {
-  const dt = Math.min(0.05, (now - last) / 1000); last = now;
-  smoothT += (scrollT - smoothT) * (reduce ? 1 : 0.06);
-  smx += (mx - smx) * 0.05; smy += (my - smy) * 0.05;
+  document.querySelectorAll('[data-goto]').forEach(btn => btn.addEventListener('click', () => {
+    pinned = btn.dataset.goto;
+    bus.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'center' });
+    setTimeout(() => booted && show(pinned), reduce ? 0 : 650);
+  }));
 
-  if (!reduce) {
-    planet.rotation.y += dt * 0.12;
-    rings.rotation.y += dt * 0.03;
-    probeA += dt * 0.35;
-  }
-  probe.position.set(Math.cos(probeA) * orbitR, 0, Math.sin(probeA) * orbitR * 0.92);
-  probe.rotation.y = probeA * 2;
+  const sleep = ms => new Promise(r => setTimeout(r, reduce ? 0 : ms));
+  const boot = async () => {
+    started = true;
+    const t0 = performance.now();
+    const timer = setInterval(() => { bootEl.textContent = 'Boot ' + ((performance.now() - t0) / 1000).toFixed(2) + 's'; }, 40);
+    for (const layer of bus.querySelectorAll('.layer')) {
+      const st = layer.querySelector('.layer-st');
+      st.textContent = '[ .. ]';
+      for (const m of layer.querySelectorAll('.mod')) { m.classList.add('on'); if (!reduce) ping(m.dataset.mod); await sleep(55); }
+      st.textContent = '[ OK ]'; st.classList.add('ok');
+      await sleep(160);
+    }
+    clearInterval(timer);
+    bootEl.textContent = `${mods.size} modules · nominal`;
+    bus.classList.add('is-booted');
+    booted = true;
+    show(pinned);
+  };
+  new IntersectionObserver(([e]) => {
+    visible = e.isIntersecting;
+    if (visible && !started) boot();
+  }, { threshold: .3 }).observe(bus);
 
-  const p = path.getPoint(reduce ? 0 : smoothT);
-  camera.position.set(p.x + system.position.x + smx * 1.4, p.y + system.position.y - smy * 1.0, p.z);
-  lookTarget.copy(system.position);
-  camera.lookAt(lookTarget);
-
-  rangeEl.textContent = Math.round(camera.position.distanceTo(system.position) * KM_PER_UNIT).toLocaleString() + ' km';
-  renderer.render(scene, camera);
-}
-
-onResize();
-if (!reduce) {
-  renderer.setAnimationLoop(frame);
-  document.addEventListener('visibilitychange', () => renderer.setAnimationLoop(document.hidden ? null : frame));
-}
+  let last = performance.now(), spawn = 0;
+  const frame = now => {
+    requestAnimationFrame(frame);
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    if (!visible || !booted || reduce) return;
+    spawn -= dt;
+    if (spawn <= 0) {
+      if (cur && hot.length) {
+        const h = hot[Math.floor(Math.random() * hot.length)];
+        send(h.el, h.to, .8, true); spawn = .14;
+      } else if (!cur && packets.length < 5) {
+        let [a, b] = edges[Math.floor(Math.random() * edges.length)];
+        if (Math.random() < .5) [a, b] = [b, a];
+        send(mkPath(a, b, 'faint'), b, 1.3 + Math.random() * .9, false);
+        spawn = .3 + Math.random() * .4;
+      } else spawn = .1;
+    }
+    for (let i = packets.length - 1; i >= 0; i--) {
+      const p = packets[i];
+      p.t += dt / p.dur;
+      if (p.t >= 1 || !p.path.isConnected) {
+        p.dot.remove(); if (!p.keep) p.path.remove();
+        if (p.t >= 1) ping(p.to);
+        packets.splice(i, 1); continue;
+      }
+      const pt = p.path.getPointAtLength(ease(p.t) * p.len);
+      p.dot.setAttribute('cx', pt.x); p.dot.setAttribute('cy', pt.y);
+    }
+  };
+  requestAnimationFrame(frame);
+})();
 </script>
+<script type="module" src="sims.js"></script>
 </body>
 </html>
